@@ -9,9 +9,40 @@
 * -----------------------------------------------------*/
 var kCal = function(config){
 	var
+		/**
+		 * [lunarInfo 保存用于查询的农历信息]
+		 * @type {Object}
+		 */
+		lunarInfo = {
+			/**
+			 * [leapInfo 农历1900-2100的闰月，大小月信息表]
+			 * @type {Array}
+			 */
+			leapInfo:[0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+			0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+			0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+			0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+			0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+			0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+			0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+			0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+			0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+			0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,
+			0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+			0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+			0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
+			0x05aa0,0x076a3,0x096d0,0x04bd7,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
+			0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
+			0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50, 0x06b20,0x1a6c4,0x0aae0,
+			0x0a2e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4,
+			0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
+			0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
+			0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
+			0x0d520],
+		},
 		monDay = [31,28,31,30,31,30,31,31,30,31,30,31],
 		leapMonDay = [31,29,31,30,31,30,31,31,30,31,30,31],
-		calId = config.calId ？ config.calId : {console.log('Error:未指定万年历的父元素id';return;)}
+		calId = config.calId ? config.calId : 0,
 		currentDate = config.currentDate ? config.currentDate : new Date().getDate(),
 		currentMonth = config.currentMonth ? config.currentMonth : new Date().getMonth(),
 		currentYear = config.currentYear ? config.currentYear : new Date().getYear(); 
@@ -32,6 +63,62 @@ var kCal = function(config){
 		wrapEle.id = 'k_CalWrap';//方便为万年历添加样式。
 
 
+	}
+
+	/**x
+	 * [solarToLunar 根据阳历日期获取相应阴历日期]
+	 * @param  {[Integer]} year  [阳历年]
+	 * @param  {[Integer]} month [阳历月]
+	 * @param  {[Integer]} day   [阳历天]
+	 * @return {[type]}       [description]
+	 */
+	function solarToLunar(year,month,day){
+		
+	}
+
+	/**
+	 * [offset 计算所传入年份阳历与阴历的偏差天数]
+	 * @param  {[Integer]} year [年份]
+	 * @return {[Integer]} offset        [偏差天数]
+	 */
+	function offset(year){
+		var
+			temp = (Date.UTC(year,0) - Date.UTC(1901,0)) / 86400000;
+
+		for(var i=year-1; i>1900; i--){
+			temp = temp - lunarDay(i);
+		}
+		return temp;
+
+	}
+	console.log(offset(2016));
+	/**
+	 * [lunnarDay 返回该年份的阴历一整年的天数]
+	 * @param  {[Integer]} year [年份]
+	 * @return {[Integer]}      [天数]
+	 */
+	function lunarDay(year){
+		var 
+			i , sum = 348;
+		for(i=0x8000; i>0x8; i>>=1){
+			sum += i&lunarInfo.leapInfo[year-1900] ? 1: 0;
+		}
+		return sum + leapMonth(year);
+	}
+
+	/**
+	 * [leapMonth 返回该年阴历闰月的天数]
+	 * @param  {[Integer]} year [年份]
+	 * @return {[Integer]}      [天数]
+	 */
+	function leapMonth(year){
+		var
+			isLeap = lunarInfo.leapInfo[year-1900] & 0xf ? true : false;
+		if(isLeap){
+			return lunarInfo.leapInfo[year-1900] & 0xf0000 ? 30 : 29;
+		}else{
+			return 0;
+		}
 	}
 	/**
 	 * [repeatCreateNode 重复生成多个节点]
@@ -93,11 +180,11 @@ var kCal = function(config){
 			// 		textNode = document.createTextNode('"'+data.eleName+'"');
 			// 	childEle.appendChild(textNode);
 			// }
-			if(data.eleName.noneChild){
-				var
-					ele = document.createElement('"'+eleName+'"'),
+			// if(data.eleName.noneChild){
+			// 	var
+			// 		ele = document.createElement('"'+eleName+'"'),
 
-			}
+			// }
 		}
 	}
 	
@@ -109,15 +196,15 @@ var kCal = function(config){
 	 * @return {[type]}              [description]
 	 */
 	function createCalBody(currentYear , currentMonth , currentDate){
-		var
-			week = countWeek(currentYear , currentMonth , 1),
-			dateHtml = '<td>'+
-							'<span>'+
-								'<a href="javascript:;">1</a>'+
-								'<label>立春</label>'+
-								'<strong>二十七</strong>'+
-						    '</span>'+
-					    '</td>',
+		// var
+		// 	week = countWeek(currentYear , currentMonth , 1),
+		// 	dateHtml = '<td>'+
+		// 					'<span>'+
+		// 						'<a href="javascript:;">1</a>'+
+		// 						'<label>立春</label>'+
+		// 						'<strong>二十七</strong>'+
+		// 				    '</span>'+
+		// 			    '</td>',
 	}
 	
 	/**
@@ -133,19 +220,21 @@ var kCal = function(config){
 		if(year<1752 || (year<1752 && month<9) || (year==1752 && month==9 && date<3) ){
 			week = (date + 2*month + Math.floor(3*(month+1)/5) + year + Math.floor(year/4) + 5) % 7;
 		}else{
-			week = (date + 2*month + Math.floor(3*(month+1)/5) + year + Math.floor(year/4) - Math.floor(year/100) + Math.floor(year/400)) % 7
+			week = (date + 2*month + Math.floor(3*(month+1)/5) + year + Math.floor(year/4) - Math.floor(year/100) + Math.floor(year/400)) % 7;
 		}	
 		return week;
 	}
 
 	//判断闰年
 	function isLeapYear(year){
-		if(year%4 == 0 && year%100 != 0 || year%400 == 0){
+		if(year%4 === 0 && year%100 !== 0 || year%400 === 0){
 			return true;
 		}else{
 			return false;
 		}
 	}
+
+
 };
 
 
@@ -154,3 +243,4 @@ kCal({
 	currentMonth:4,
 	currentYear:2016
 });
+
