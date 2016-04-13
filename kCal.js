@@ -39,14 +39,85 @@ var kCal = function(config){
 			0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
 			0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
 			0x0d520],
+			/**
+			 * [termInfo 公历1900-2100的节气信息表]
+			 * @type {Array}
+			 */
+			termInfo:[	'9778397bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e','97bcf97c3598082c95f8c965cc920f',
+				'97bd0b06bdb0722c965ce1cfcc920f','b027097bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e',
+				'97bcf97c359801ec95f8c965cc920f','97bd0b06bdb0722c965ce1cfcc920f','b027097bd097c36b0b6fc9274c91aa',
+				'97b6b97bd19801ec9210c965cc920e','97bcf97c359801ec95f8c965cc920f',	'97bd0b06bdb0722c965ce1cfcc920f',
+				'b027097bd097c36b0b6fc9274c91aa','9778397bd19801ec9210c965cc920e','97b6b97bd19801ec95f8c965cc920f',
+				'97bd09801d98082c95f8e1cfcc920f','97bd097bd097c36b0b6fc9210c8dc2','9778397bd197c36c9210c9274c91aa',
+				'97b6b97bd19801ec95f8c965cc920e','97bd09801d98082c95f8e1cfcc920f',	'97bd097bd097c36b0b6fc9210c8dc2',
+				'9778397bd097c36c9210c9274c91aa','97b6b97bd19801ec95f8c965cc920e','97bcf97c3598082c95f8e1cfcc920f',
+				'97bd097bd097c36b0b6fc9210c8dc2','9778397bd097c36c9210c9274c91aa','97b6b97bd19801ec9210c965cc920e',
+				'97bcf97c3598082c95f8c965cc920f','97bd097bd097c35b0b6fc920fb0722','9778397bd097c36b0b6fc9274c91aa',
+				'97b6b97bd19801ec9210c965cc920e','97bcf97c3598082c95f8c965cc920f',	'97bd097bd097c35b0b6fc920fb0722',
+				'9778397bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e','97bcf97c359801ec95f8c965cc920f',
+				'97bd097bd097c35b0b6fc920fb0722','9778397bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e',
+				'97bcf97c359801ec95f8c965cc920f','97bd097bd097c35b0b6fc920fb0722','9778397bd097c36b0b6fc9274c91aa',
+				'97b6b97bd19801ec9210c965cc920e','97bcf97c359801ec95f8c965cc920f',	'97bd097bd07f595b0b6fc920fb0722',
+				'9778397bd097c36b0b6fc9210c8dc2','9778397bd19801ec9210c9274c920e','97b6b97bd19801ec95f8c965cc920f',
+				'97bd07f5307f595b0b0bc920fb0722','7f0e397bd097c36b0b6fc9210c8dc2','9778397bd097c36c9210c9274c920e',
+				'97b6b97bd19801ec95f8c965cc920f','97bd07f5307f595b0b0bc920fb0722','7f0e397bd097c36b0b6fc9210c8dc2',
+				'9778397bd097c36c9210c9274c91aa','97b6b97bd19801ec9210c965cc920e','97bd07f1487f595b0b0bc920fb0722',
+				'7f0e397bd097c36b0b6fc9210c8dc2','9778397bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e',
+				'97bcf7f1487f595b0b0bb0b6fb0722','7f0e397bd097c35b0b6fc920fb0722',	'9778397bd097c36b0b6fc9274c91aa',
+				'97b6b97bd19801ec9210c965cc920e','97bcf7f1487f595b0b0bb0b6fb0722','7f0e397bd097c35b0b6fc920fb0722',
+				'9778397bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e','97bcf7f1487f531b0b0bb0b6fb0722',
+				'7f0e397bd097c35b0b6fc920fb0722','9778397bd097c36b0b6fc9274c91aa','97b6b97bd19801ec9210c965cc920e',
+				'97bcf7f1487f531b0b0bb0b6fb0722','7f0e397bd07f595b0b6fc920fb0722',	'9778397bd097c36b0b6fc9274c91aa',
+				'97b6b97bd19801ec9210c9274c920e','97bcf7f0e47f531b0b0bb0b6fb0722','7f0e397bd07f595b0b0bc920fb0722',
+				'9778397bd097c36b0b6fc9210c91aa','97b6b97bd197c36c9210c9274c920e','97bcf7f0e47f531b0b0bb0b6fb0722',
+				'7f0e397bd07f595b0b0bc920fb0722','9778397bd097c36b0b6fc9210c8dc2','9778397bd097c36c9210c9274c920e',
+				'97b6b7f0e47f531b0723b0b6fb0722','7f0e37f5307f595b0b0bc920fb0722',	'7f0e397bd097c36b0b6fc9210c8dc2',
+				'9778397bd097c36b0b70c9274c91aa','97b6b7f0e47f531b0723b0b6fb0721','7f0e37f1487f595b0b0bb0b6fb0722',
+				'7f0e397bd097c35b0b6fc9210c8dc2','9778397bd097c36b0b6fc9274c91aa','97b6b7f0e47f531b0723b0b6fb0721',
+				'7f0e27f1487f595b0b0bb0b6fb0722','7f0e397bd097c35b0b6fc920fb0722',	'9778397bd097c36b0b6fc9274c91aa',
+				'97b6b7f0e47f531b0723b0b6fb0721','7f0e27f1487f531b0b0bb0b6fb0722','7f0e397bd097c35b0b6fc920fb0722',
+				'9778397bd097c36b0b6fc9274c91aa','97b6b7f0e47f531b0723b0b6fb0721','7f0e27f1487f531b0b0bb0b6fb0722',
+				'7f0e397bd097c35b0b6fc920fb0722','9778397bd097c36b0b6fc9274c91aa','97b6b7f0e47f531b0723b0b6fb0721',
+				'7f0e27f1487f531b0b0bb0b6fb0722','7f0e397bd07f595b0b0bc920fb0722',	'9778397bd097c36b0b6fc9274c91aa',
+				'97b6b7f0e47f531b0723b0787b0721','7f0e27f0e47f531b0b0bb0b6fb0722','7f0e397bd07f595b0b0bc920fb0722',
+				'9778397bd097c36b0b6fc9210c91aa','97b6b7f0e47f149b0723b0787b0721','7f0e27f0e47f531b0723b0b6fb0722',
+				'7f0e397bd07f595b0b0bc920fb0722','9778397bd097c36b0b6fc9210c8dc2','977837f0e37f149b0723b0787b0721',
+				'7f07e7f0e47f531b0723b0b6fb0722','7f0e37f5307f595b0b0bc920fb0722','7f0e397bd097c35b0b6fc9210c8dc2',
+				'977837f0e37f14998082b0787b0721','7f07e7f0e47f531b0723b0b6fb0721','7f0e37f1487f595b0b0bb0b6fb0722',
+				'7f0e397bd097c35b0b6fc9210c8dc2','977837f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',
+				'7f0e27f1487f531b0b0bb0b6fb0722','7f0e397bd097c35b0b6fc920fb0722','977837f0e37f14998082b0787b06bd',
+				'7f07e7f0e47f531b0723b0b6fb0721','7f0e27f1487f531b0b0bb0b6fb0722','7f0e397bd097c35b0b6fc920fb0722',
+				'977837f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721','7f0e27f1487f531b0b0bb0b6fb0722',
+				'7f0e397bd07f595b0b0bc920fb0722','977837f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',
+				'7f0e27f1487f531b0b0bb0b6fb0722','7f0e397bd07f595b0b0bc920fb0722',	'977837f0e37f14998082b0787b06bd',
+				'7f07e7f0e47f149b0723b0787b0721','7f0e27f0e47f531b0b0bb0b6fb0722','7f0e397bd07f595b0b0bc920fb0722',
+				'977837f0e37f14998082b0723b06bd','7f07e7f0e37f149b0723b0787b0721','7f0e27f0e47f531b0723b0b6fb0722',
+				'7f0e397bd07f595b0b0bc920fb0722','977837f0e37f14898082b0723b02d5','7ec967f0e37f14998082b0787b0721',
+				'7f07e7f0e47f531b0723b0b6fb0722','7f0e37f1487f595b0b0bb0b6fb0722','7f0e37f0e37f14898082b0723b02d5',
+				'7ec967f0e37f14998082b0787b0721','7f07e7f0e47f531b0723b0b6fb0722','7f0e37f1487f531b0b0bb0b6fb0722',
+				'7f0e37f0e37f14898082b0723b02d5','7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',
+				'7f0e37f1487f531b0b0bb0b6fb0722','7f0e37f0e37f14898082b072297c35','7ec967f0e37f14998082b0787b06bd',
+				'7f07e7f0e47f531b0723b0b6fb0721','7f0e27f1487f531b0b0bb0b6fb0722','7f0e37f0e37f14898082b072297c35',
+				'7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',	'7f0e27f1487f531b0b0bb0b6fb0722',
+				'7f0e37f0e366aa89801eb072297c35','7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f149b0723b0787b0721',
+				'7f0e27f1487f531b0b0bb0b6fb0722','7f0e37f0e366aa89801eb072297c35','7ec967f0e37f14998082b0723b06bd',
+				'7f07e7f0e47f149b0723b0787b0721','7f0e27f0e47f531b0723b0b6fb0722','7f0e37f0e366aa89801eb072297c35',
+				'7ec967f0e37f14998082b0723b06bd','7f07e7f0e37f14998083b0787b0721','7f0e27f0e47f531b0723b0b6fb0722',
+				'7f0e37f0e366aa89801eb072297c35','7ec967f0e37f14898082b0723b02d5','7f07e7f0e37f14998082b0787b0721',
+				'7f07e7f0e47f531b0723b0b6fb0722','7f0e36665b66aa89801e9808297c35',	'665f67f0e37f14898082b0723b02d5',
+				'7ec967f0e37f14998082b0787b0721','7f07e7f0e47f531b0723b0b6fb0722',	'7f0e36665b66a449801e9808297c35',
+				'665f67f0e37f14898082b0723b02d5','7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',
+				'7f0e36665b66a449801e9808297c35','665f67f0e37f14898082b072297c35',	'7ec967f0e37f14998082b0787b06bd',
+				'7f07e7f0e47f531b0723b0b6fb0721','7f0e26665b66a449801e9808297c35',	'665f67f0e37f1489801eb072297c35',
+				'7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',	'7f0e27f1487f531b0b0bb0b6fb0722']
 		},
 		calId = config.calId ? config.calId : 0,
 		currentDate = config.currentDate ? config.currentDate : new Date().getDate(),
-		currentMonth = config.currentMonth ? config.currentMonth : new Date().getMonth(),
-		currentYear = config.currentYear ? config.currentYear : new Date().getYear(); 
+		currentMonth = config.currentMonth ? config.currentMonth : new Date().getMonth()+1,
+		currentYear = config.currentYear ? config.currentYear : new Date().getFullYear(); 
 	
 	/**
-	 * [createStaticCal 生成万年历静态部分html]
+	 * [createStaticCal 生成万年历html]
 	 * @param  {[string]} calId        [万年历的父元素id]
 	 * @param  {[number]} currentYear  [指定年份]
 	 * @param  {[number]} currentMonth [指定月份]
@@ -56,10 +127,13 @@ var kCal = function(config){
 	 */
 	function createStaticCal(calId,currentYear,currentMonth){
 		var
+			lsList = getL2SInfo(currentYear,currentMonth),
 			wrapEle = document.getElementById(calId),
 			headDiv = document.createElement('div');
 		wrapEle.id = 'k_CalWrap';//方便为万年历添加样式。
+		for(var i=0; i<lsList.length; i++){
 
+		}
 
 	}
 	/**
@@ -73,11 +147,12 @@ var kCal = function(config){
 			lsList = new Array(42),
 			prevMonLastDate,//参数指定月份上一月份的最后日期（阳历）
 			prevMonDays, nextMonDays,//日期列表所需显示阳历上一月份与下一月份的天数
-			week = new Date(year , month-1).getDay() + 1,//1,2..7分别指向星期一，二....日
+			week = new Date(year , month-1).getDay(),//1,2..7分别指向星期一，二....日
 			isLeap = isLeapYear(year),
 			monDay = [31,28,31,30,31,30,31,31,30,31,30,31],//阳历平年每月的天数
 			leapMonDay = [31,29,31,30,31,30,31,31,30,31,30,31],//阳历闰年每月的天数
-			lunarYMD;//对应阳历日期的阴历日期对象
+			thisMonDays = isLeap ? leapMonDay[month-1] : monDay[month-1],//该月的天数
+			lunarYMD,//对应阳历日期的阴历日期对象
 			// lunarYMD = solarToLunar(year, month, 1),//对应阳历日期的阴历日期对象
 			// lDay = lunarYMD.lDay,
 			// lMonth = lunarYMD.lMonth,
@@ -88,13 +163,24 @@ var kCal = function(config){
 			// lMonLastDate = isBigMon(year,lMonth) ? 30 : 29,//阴历对应月份的最后日期
 			// lPrevMonLastDate,//阴历上一月份月份的最后日期
 			// lbeginDate;//万年历上阴历显示的第一天
+			termDays = getTremDate(year,month);
 
-		prevMonDays = week-1;
-		prevMonLastDate =  isLeap ? leapMonDay[month-2] : monDay[month-2];
-		nextMonDays = 42 - prevMonDays - (isLeap ? leapMonDay[month-1] : monDay[month-1]);
+		prevMonDays = (week===0) ? 6 : week-1;
+		console.log(week);
+		console.log(new Date(year , month-1,17).getDay());
+		if(month === 1){
+			prevMonLastDate = monDay[11];
+		}else{
+			prevMonLastDate =  isLeap ? leapMonDay[month-2] : monDay[month-2];
+		}
+		if(month === 12){
+			nextMonDays = 42 - prevMonDays - monDay[0];
+		}else{
+			nextMonDays = 42 - prevMonDays - (isLeap ? leapMonDay[month-1] : monDay[month-1]);
+		}
 		
 		//填充阳历日期信息
-		for(var i=1 , j=1; i<=42; i++){
+		for(var i=1 , j=1 ,k=1; i<=42; i++){
 			var lsInfo = {};
 			if(i <= prevMonDays){
 				if(month === 1){
@@ -105,27 +191,33 @@ var kCal = function(config){
 					lsInfo.sYear = year;
 				}
 				lsInfo.sDay = prevMonLastDate - prevMonDays + i;
-			}
-			if(i > isLeap ? leapMonDay[month-1] : monDay[month-1] && j<=nextMonDays){
-				if(month === 12){
-					lsInfo.sMon = 1;
-					lsInfo.sYear = year+1;
-				}else{
-					lsInfo.sMon = month+1;
-					lsInfo.sYear = year;
-				}
-				lsInfo.sDay = j;
-				j ++;
 			}else{
-				lsInfo.sMon = month;
-				lsInfo.sDay = i;
+				if(i > thisMonDays+prevMonDays && j<=nextMonDays){
+					if(month === 12){
+						lsInfo.sMon = 1;
+						lsInfo.sYear = year+1;
+					}else{
+						lsInfo.sMon = month+1;
+						lsInfo.sYear = year;
+					}
+					lsInfo.sDay = j;
+					j ++;
+				}else{
+					lsInfo.sMon = month;
+					lsInfo.sDay = k;
+					lsInfo.sYear = year;
+					if(k === termDays[0] || k === termDays[1]){
+						
+					}
+					k++;
+				}
 			}
 			lsList[i-1] = lsInfo;
 		}
 
 		//填充阴历日期信息
 		for(i=0; i<42; i++){
-			lunarYMD = solarToLunar(lsList[i].sYear, lsList.sMon, lsList.sDay);
+			lunarYMD = solarToLunar(lsList[i].sYear, lsList[i].sMon, lsList[i].sDay);
 			lsList[i].lYear = lunarYMD.lYear;
 			lsList[i].lMon = lunarYMD.lMonth;
 			lsList[i].lDay = lunarYMD.lDay;
@@ -166,8 +258,9 @@ var kCal = function(config){
 		// 	}
 		// }
 		console.log(lsList);
+		return lsList;
 	}
-	getL2SInfo(2016,4);
+	getL2SInfo(2016,1);
 	/**
 	 * [solarToLunar 根据阳历日期获取相应阴历日期]
 	 * @param  {[Integer]} year  [阳历年]
@@ -220,7 +313,54 @@ var kCal = function(config){
 			isAfterLeap : isAfterLeap
 		};
 	}
+	//获取该年指定月份的节气日期（阳历）
+	function getTremDate(year,month){
 	
+		var 
+			termString = lunarInfo.termInfo[year-1900],
+			termList = [
+				parseInt('0x'+termString.substr(0,5),16).toString() ,
+				parseInt('0x'+termString.substr(5,5),16).toString(),
+				parseInt('0x'+termString.substr(10,5),16).toString(),
+				parseInt('0x'+termString.substr(15,5),16).toString(),
+				parseInt('0x'+termString.substr(20,5),16).toString(),
+				parseInt('0x'+termString.substr(25,5),16).toString()
+			],
+			termDay= [
+				termList[0].substr(0,1),
+				termList[0].substr(1,2),
+				termList[0].substr(3,1),
+				termList[0].substr(4,2),
+				
+				termList[1].substr(0,1),
+				termList[1].substr(1,2),
+				termList[1].substr(3,1),
+				termList[1].substr(4,2),
+				
+				termList[2].substr(0,1),
+				termList[2].substr(1,2),
+				termList[2].substr(3,1),
+				termList[2].substr(4,2),
+				
+				termList[3].substr(0,1),
+				termList[3].substr(1,2),
+				termList[3].substr(3,1),
+				termList[3].substr(4,2),
+				
+				termList[4].substr(0,1),
+				termList[4].substr(1,2),
+				termList[4].substr(3,1),
+				termList[4].substr(4,2),
+				
+				termList[5].substr(0,1),
+				termList[5].substr(1,2),
+				termList[5].substr(3,1),
+				termList[5].substr(4,2),
+			];
+		
+		return [parseInt(termDay[month*2-2],10) , parseInt(termDay[month*2-1],10)];
+	}
+	console.log(getTremDate(2016,4));
 	/**
 	 * [lunarDay 返回该年份的阴历一整年的天数]
 	 * @param  {[Integer]} year [年份]
