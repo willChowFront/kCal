@@ -63,14 +63,13 @@ var kCal = function(config){
 
 	}
 	/**
-	 * [lsList 返回显示万年历主体日期列表所需的阳历，阴历信息]
+	 * [lsList 返回显示万年历主体日期列表所需的阳历，阴历信息 ]
 	 * @param  {[Integer]} year  [阳历年]
 	 * @param  {[Integer]} month [阳历月]
 	 * @return {[type]}       [description]
 	 */
 	function getL2SInfo(year,month){
 		var
-			lsInfo = {},
 			lsList = new Array(42),
 			prevMonLastDate,//参数指定月份上一月份的最后日期（阳历）
 			prevMonDays, nextMonDays,//日期列表所需显示阳历上一月份与下一月份的天数
@@ -78,21 +77,25 @@ var kCal = function(config){
 			isLeap = isLeapYear(year),
 			monDay = [31,28,31,30,31,30,31,31,30,31,30,31],//阳历平年每月的天数
 			leapMonDay = [31,29,31,30,31,30,31,31,30,31,30,31],//阳历闰年每月的天数
-			
-			lunarYMD = solarToLunar(year, month, 1),//对应阳历日期的阴历日期对象
-			lDay = lunarYMD.lDay,
-			lMonth = lunarYMD.lMonth,
-			lYear = lunarYMD.lYear,
-			lLeapMonth = leapMonth(year).leapMonth,
-			lLeapDays = leapMonth(year).leapDays,
-			lPrevMonLastDate,//阴历上一月份的最后日期
-			lbeginDate,//万年历上阴历显示的第一天
+			lunarYMD;//对应阳历日期的阴历日期对象
+			// lunarYMD = solarToLunar(year, month, 1),//对应阳历日期的阴历日期对象
+			// lDay = lunarYMD.lDay,
+			// lMonth = lunarYMD.lMonth,
+			// lYear = lunarYMD.lYear,
+			// isAfterLeap = lunarYMD.isAfterLeap,
+			// lLeapMonth = leapMonth(year).leapMonth,
+			// lLeapDays = leapMonth(year).leapDays,
+			// lMonLastDate = isBigMon(year,lMonth) ? 30 : 29,//阴历对应月份的最后日期
+			// lPrevMonLastDate,//阴历上一月份月份的最后日期
+			// lbeginDate;//万年历上阴历显示的第一天
 
 		prevMonDays = week-1;
 		prevMonLastDate =  isLeap ? leapMonDay[month-2] : monDay[month-2];
-		nextMonDays = 42 - prevMonDays - isLeap ? leapMonDay[month-1] : monDay[month-1];
+		nextMonDays = 42 - prevMonDays - (isLeap ? leapMonDay[month-1] : monDay[month-1]);
+		
 		//填充阳历日期信息
 		for(var i=1 , j=1; i<=42; i++){
+			var lsInfo = {};
 			if(i <= prevMonDays){
 				if(month === 1){
 					lsInfo.sMon = 12;
@@ -103,7 +106,7 @@ var kCal = function(config){
 				}
 				lsInfo.sDay = prevMonLastDate - prevMonDays + i;
 			}
-			else if(i > isLeap ? leapMonDay[month-1] : monDay[month-1] && j<=nextMonDays){
+			if(i > isLeap ? leapMonDay[month-1] : monDay[month-1] && j<=nextMonDays){
 				if(month === 12){
 					lsInfo.sMon = 1;
 					lsInfo.sYear = year+1;
@@ -119,17 +122,53 @@ var kCal = function(config){
 			}
 			lsList[i-1] = lsInfo;
 		}
-		//填充阴历日期信息
-		for(i=1; i<=42; i++){
-			if(lDay > prevMonDays){
-				lsList[i-1].lDay = lDay-prevMonDays+i;
-				lsList[i-1].lMonth = lMonth;
-				lsList[i-1].lYear = lYear;
-			}
-		}
-	}
 
-	/**x
+		//填充阴历日期信息
+		for(i=0; i<42; i++){
+			lunarYMD = solarToLunar(lsList[i].sYear, lsList.sMon, lsList.sDay);
+			lsList[i].lYear = lunarYMD.lYear;
+			lsList[i].lMon = lunarYMD.lMonth;
+			lsList[i].lDay = lunarYMD.lDay;
+		}
+
+		// if(lLeapMonth === lMonth){
+		// 	if(isAfterLeap){
+		// 		lPrevMonLastDate = lLeapDays;
+		// 	}else{
+		// 		lPrevMonLastDate = (lMonth===1) ? (isBigMon(lYear-1,lMonth-1) ? 30: 29) : (isBigMon(lYear,lMonth) ? 30: 29);
+		// 	}
+		// }
+		//填充阴历日期信息
+		// for(i=1 , j=1; i<=42; i++){
+		// 	if(lDay > prevMonDays){
+		// 		if(i <= isBigMon(lYear,lMonth)?30:29){
+		// 			lsList[i-1].lDay = lDay-prevMonDays+i;
+		// 			lsList[i-1].lMonth = lMonth;
+		// 			lsList[i-1].lYear = lYear;
+		// 		}else{
+		// 			if(isAfterLeap){
+		// 				lsList[i-1].lDay = j;
+		// 				if(lMonth === 12){
+		// 					lsList[i-1].lMonth = 1;
+		// 					lsList[i-1].lYear = lYear+1;
+		// 				}else{
+		// 					lsList[i-1].lMonth = lMonth+1;
+		// 					lsList[i-1].lYear = lYear;
+		// 				}
+		// 			}else{
+
+		// 			}
+		// 		}
+		// 	}else{
+		// 		if(i <= prevMonDays-lDay){
+		// 			lsList[i-1].lDay = lPrevMonLastDate - (prevMonDays-lDay)+i;
+		// 		}
+		// 	}
+		// }
+		console.log(lsList);
+	}
+	getL2SInfo(2016,4);
+	/**
 	 * [solarToLunar 根据阳历日期获取相应阴历日期]
 	 * @param  {[Integer]} year  [阳历年]
 	 * @param  {[Integer]} month [阳历月]
@@ -141,6 +180,7 @@ var kCal = function(config){
 			lYear,lMonth,lDay,//阴历年、月、日
 			lLeapMonth,//阴历闰的月份
 			temp,
+			isAfterLeap = false,
 			offset = (Date.UTC(year,month-1,day) - Date.UTC(1900,0,31)) / 86400000;
 		
 		for(var i=1900; i<2101&&offset>0; i++){
@@ -151,14 +191,15 @@ var kCal = function(config){
 			offset += temp;
 			i --;
 		}
-		console.log(offset);
+		
 		lYear = i;
 		lLeapMonth = lunarInfo.leapInfo[lYear-1900] & 0xf;
 
 		for(i=1; i<13 && offset>0; i++){
-			if(i === lLeapMonth){
+			if(i === lLeapMonth && !isAfterLeap){
 				temp = leapMonth(lYear).leapDays;
 				i --;
+				isAfterLeap = ture;
 			}else{
 				temp = isBigMon(lYear , i) ? 30 : 29;
 			}
@@ -175,7 +216,8 @@ var kCal = function(config){
 		return {
 			lYear : lYear,
 			lMonth : lMonth,
-			lDay : lDay
+			lDay : lDay,
+			isAfterLeap : isAfterLeap
 		};
 	}
 	
@@ -224,13 +266,13 @@ var kCal = function(config){
 		if(isLeap){
 			return {
 				leapMonth : isLeap,
-				leapDays : lunarInfo.leapInfo[year-1900] & 0xf0000 ? 30 : 29;
-			}
+				leapDays : lunarInfo.leapInfo[year-1900] & 0xf0000 ? 30 : 29
+			};
 		}else{
 			return {
 				leapMonth : 0,
 				leapDays : 0
-			}
+			};
 		}
 	}
 	/**
