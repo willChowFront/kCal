@@ -109,13 +109,22 @@ var kCal = function(config){
 				'665f67f0e37f14898082b0723b02d5','7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',
 				'7f0e36665b66a449801e9808297c35','665f67f0e37f14898082b072297c35',	'7ec967f0e37f14998082b0787b06bd',
 				'7f07e7f0e47f531b0723b0b6fb0721','7f0e26665b66a449801e9808297c35',	'665f67f0e37f1489801eb072297c35',
-				'7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',	'7f0e27f1487f531b0b0bb0b6fb0722']
+				'7ec967f0e37f14998082b0787b06bd','7f07e7f0e47f531b0723b0b6fb0721',	'7f0e27f1487f531b0b0bb0b6fb0722'],
+				/**
+				 * [chineseTerm 节气中文名称速查表]
+				 * @type {Array}
+				 */
+				chineseTerm : ["\u5c0f\u5bd2","\u5927\u5bd2","\u7acb\u6625","\u96e8\u6c34","\u60ca\u86f0","\u6625\u5206","\u6e05\u660e","\u8c37\u96e8","\u7acb\u590f","\u5c0f\u6ee1","\u8292\u79cd","\u590f\u81f3","\u5c0f\u6691","\u5927\u6691","\u7acb\u79cb","\u5904\u6691","\u767d\u9732","\u79cb\u5206","\u5bd2\u9732","\u971c\u964d","\u7acb\u51ac","\u5c0f\u96ea","\u5927\u96ea","\u51ac\u81f3"],
+				chineseLunarDate : ["\u521d\u4e00","\u521d\u4e8c","\u521d\u4e09","\u521d\u56db","\u521d\u4e94","\u521d\u516d","\u521d\u4e03","\u521d\u516b","\u521d\u4e5d","\u521d\u5341","\u5341 \u4e00","\u5341\u4e8c","\u5341\u4e09","\u5341\u56db","\u5341\u4e94","\u5341\u516d","\u5341\u4e03","\u5341\u516b","\u5341\u4e5d","\u5eff\u5341","\u5eff\u4e00","\u5eff\u4e8c","\u5eff\u4e09","\u5eff\u56db","\u4e94","\u5eff\u516d","\u5eff\u4e03","\u5eff\u516b","\u5eff\u4e5d","\u5eff\u5341","\u5345"],
+				chineseWeekName : ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"]
 		},
+		now = new Date(),//当日日期
 		calId = config.calId ? config.calId : 0,
 		currentDate = config.currentDate ? config.currentDate : new Date().getDate(),
 		currentMonth = config.currentMonth ? config.currentMonth : new Date().getMonth()+1,
-		currentYear = config.currentYear ? config.currentYear : new Date().getFullYear(); 
-	
+		currentYear = config.currentYear ? config.currentYear : new Date().getFullYear(),
+		cssUrl = config.cssUrl;
+	getCss(cssUrl);//获取默认样式
 	/**
 	 * [createStaticCal 生成万年历html]
 	 * @param  {[string]} calId        [万年历的父元素id]
@@ -127,14 +136,133 @@ var kCal = function(config){
 	 */
 	function createStaticCal(calId,currentYear,currentMonth){
 		var
+			liEle,textNode,aEle,spanEle,lsInfo,optionEle,
 			lsList = getL2SInfo(currentYear,currentMonth),
+			yearSelectEle = document.createElement('select'),
+			monthSelectEle = document.createElement('select'),
 			wrapEle = document.getElementById(calId),
-			headDiv = document.createElement('div');
-		wrapEle.id = 'k_CalWrap';//方便为万年历添加样式。
-		for(var i=0; i<lsList.length; i++){
+			headDiv = document.createElement('div'),
+			bodyDiv = document.createElement('div'),
+			ulEle = document.createElement('ul');
+		
+		headDiv.className = 'cal-head';	
 
+		aEle = document.createElement('a');
+		aEle.href = "javascript:;";
+		aEle.className = 'prev-year';
+		aEle.id = 'J_prevYear';
+		headDiv.appendChild(aEle);
+		for(var i=1900; i<=2100; i++){
+			optionEle = document.createElement('option');
+			textNode = document.createTextNode(''+i+'年');
+			optionEle.appendChild(textNode);
+			optionEle.value = i;
+			yearSelectEle.appendChild(optionEle);
+			if(i === now.getFullYear()){
+				optionEle.selected = true;
+			}
+		}
+		yearSelectEle.className = 'cal-year';
+		yearSelectEle.id = 'J_calYear';
+		headDiv.appendChild(yearSelectEle);
+		aEle = document.createElement('a');
+		aEle.href = "javascript:;";
+		aEle.className = 'prev-year';
+		aEle.id = 'J_prevYear';
+		aEle.className = 'next-year';
+		aEle.id = 'J_nextYear';
+		headDiv.appendChild(aEle);
+
+		aEle = document.createElement('a');
+		aEle.href = "javascript:;";
+		aEle.className = 'prev-year';
+		aEle.id = 'J_prevYear';
+		aEle.className = 'prev-month';
+		aEle.id = 'J_prevMonth';
+		headDiv.appendChild(aEle);
+		for(i=1; i<=12; i++){
+			optionEle = document.createElement('option');
+			textNode = document.createTextNode(''+i+'月');
+			optionEle.appendChild(textNode);
+			optionEle.value = i;
+			monthSelectEle.appendChild(optionEle);
+			if(i === now.getMonth()+1){
+				optionEle.selected = true;
+			}
+		}
+		monthSelectEle.className = 'cal-month';
+	monthSelectEle.id = 'J_calMonth';
+		headDiv.appendChild(monthSelectEle);
+		aEle = document.createElement('a');
+		aEle.href = "javascript:;";
+		aEle.className = 'prev-year';
+		aEle.id = 'J_prevYear';
+		aEle.className = 'next-month';
+		aEle.id = 'J_nextMonth';
+		headDiv.appendChild(aEle);
+		
+		wrapEle.appendChild(headDiv);
+		
+		for(i=0; i<7; i++){
+			liEle = document.createElement('li');
+			liEle.className = 'week-name';
+			textNode = document.createTextNode(lunarInfo.chineseWeekName[i]);
+			liEle.appendChild(textNode);
+			ulEle.appendChild(liEle);
 		}
 
+		bodyDiv.appendChild(ulEle);
+		wrapEle.appendChild(bodyDiv);
+		wrapEle.className = wrapEle.className + ' k-cal-wrap';//方便为万年历添加样式。
+
+		for(i=0; i<lsList.length; i++){
+			lsInfo = lsList[i];
+			liEle = document.createElement('li');
+			
+			aEle = document.createElement('a');
+			textNode = document.createTextNode(lsInfo.sDay);
+			aEle.appendChild(textNode);
+			aEle.href = "javascript:;";
+
+			spanEle = document.createElement('span');
+			if(!lsInfo.term){
+				textNode = document.createTextNode(lsInfo.lDay);
+			}else{
+				textNode = document.createTextNode(lsInfo.term);
+				spanEle.className = 'term';
+			}
+			spanEle.appendChild(textNode);
+			
+			liEle.appendChild(aEle);
+			liEle.appendChild(spanEle);
+			liEle.className = 'cal-date';
+			if(lsInfo.isToday){
+				liEle.className = liEle.className + ' today';
+			}
+			ulEle.appendChild(liEle);
+		}
+
+	}
+	createStaticCal("J_calWrap",2016,4);
+	eventHandler();
+	/**
+	 * [eventHandler 添加事件处理]
+	 * @return {[type]} [description]
+	 */
+	function eventHandler() {
+		var
+			prevYearBtn = document.getElementById('J_prevYear'),
+			nextYearBtn = document.getElementById('J_nextYear'),
+			prevMonthBtn = document.getElementById('J_prevMonth'),
+			nextMonthBtn = document.getElementById('J_nextMonth'),
+			yearSelect = document.getElementById('J_calYear'),
+			monthSelect = document.getElementById('J_calMonth');
+
+		prevYearBtn.addEventListener('click',function(ev){
+			var
+				currentYear = yearSelect.value;
+			
+		},false);
 	}
 	/**
 	 * [lsList 返回显示万年历主体日期列表所需的阳历，阴历信息 ]
@@ -153,30 +281,24 @@ var kCal = function(config){
 			leapMonDay = [31,29,31,30,31,30,31,31,30,31,30,31],//阳历闰年每月的天数
 			thisMonDays = isLeap ? leapMonDay[month-1] : monDay[month-1],//该月的天数
 			lunarYMD,//对应阳历日期的阴历日期对象
-			// lunarYMD = solarToLunar(year, month, 1),//对应阳历日期的阴历日期对象
-			// lDay = lunarYMD.lDay,
-			// lMonth = lunarYMD.lMonth,
-			// lYear = lunarYMD.lYear,
-			// isAfterLeap = lunarYMD.isAfterLeap,
-			// lLeapMonth = leapMonth(year).leapMonth,
-			// lLeapDays = leapMonth(year).leapDays,
-			// lMonLastDate = isBigMon(year,lMonth) ? 30 : 29,//阴历对应月份的最后日期
-			// lPrevMonLastDate,//阴历上一月份月份的最后日期
-			// lbeginDate;//万年历上阴历显示的第一天
-			termDays = getTremDate(year,month);
-
+			prevMonTermDays , nextMonTermDays,//阳历上一月份，下一月份的节气日期
+			thisMonTermDays = getTermDate(year,month);//指定月份的节气日期
+		
 		prevMonDays = (week===0) ? 6 : week-1;
-		console.log(week);
-		console.log(new Date(year , month-1,17).getDay());
+		
 		if(month === 1){
 			prevMonLastDate = monDay[11];
+			prevMonTermDays = getTermDate(year-1 , 12);
 		}else{
 			prevMonLastDate =  isLeap ? leapMonDay[month-2] : monDay[month-2];
+			prevMonTermDays = getTermDate(year,month-1);
 		}
 		if(month === 12){
 			nextMonDays = 42 - prevMonDays - monDay[0];
+			nextMonTermDays = getTermDate(year+1 , 1);
 		}else{
 			nextMonDays = 42 - prevMonDays - (isLeap ? leapMonDay[month-1] : monDay[month-1]);
+			nextMonTermDays = getTermDate(year,month+1);
 		}
 		
 		//填充阳历日期信息
@@ -191,6 +313,12 @@ var kCal = function(config){
 					lsInfo.sYear = year;
 				}
 				lsInfo.sDay = prevMonLastDate - prevMonDays + i;
+				if(lsInfo.sDay === prevMonTermDays[1]){
+					lsInfo.term = lunarInfo.chineseTerm[2*lsInfo.sMon-1];
+				}
+				if(lsInfo.sDay===now.getDate() && lsInfo.sMon===now.getMonth()+1 && lsInfo.sYear===now.getFullYear()){
+					lsInfo.isToday = true;
+				}
 			}else{
 				if(i > thisMonDays+prevMonDays && j<=nextMonDays){
 					if(month === 12){
@@ -201,13 +329,28 @@ var kCal = function(config){
 						lsInfo.sYear = year;
 					}
 					lsInfo.sDay = j;
+					if(j === nextMonTermDays[0]){
+						lsInfo.term = lunarInfo.chineseTerm[2*lsInfo.sMon-2];
+					}
+					if(j === nextMonTermDays[1]){
+						lsInfo.term = lunarInfo.chineseTerm[2*lsInfo.sMon-1];
+					}
+					if(lsInfo.sDay===now.getDate() && lsInfo.sMon===now.getMonth()+1 && lsInfo.sYear===now.getFullYear()){
+						lsInfo.isToday = true;
+					}
 					j ++;
 				}else{
 					lsInfo.sMon = month;
 					lsInfo.sDay = k;
 					lsInfo.sYear = year;
-					if(k === termDays[0] || k === termDays[1]){
-						
+					if(k === thisMonTermDays[0]){
+						lsInfo.term = lunarInfo.chineseTerm[2*month-2];
+					}
+					if(k === thisMonTermDays[1]){
+						lsInfo.term = lunarInfo.chineseTerm[2*month-1];
+					}
+					if(lsInfo.sDay===now.getDate() && lsInfo.sMon===now.getMonth()+1 && lsInfo.sYear===now.getFullYear()){
+						lsInfo.isToday = true;
 					}
 					k++;
 				}
@@ -220,47 +363,25 @@ var kCal = function(config){
 			lunarYMD = solarToLunar(lsList[i].sYear, lsList[i].sMon, lsList[i].sDay);
 			lsList[i].lYear = lunarYMD.lYear;
 			lsList[i].lMon = lunarYMD.lMonth;
-			lsList[i].lDay = lunarYMD.lDay;
+			lsList[i].lDay = lunarInfo.chineseLunarDate[lunarYMD.lDay-1];
 		}
-
-		// if(lLeapMonth === lMonth){
-		// 	if(isAfterLeap){
-		// 		lPrevMonLastDate = lLeapDays;
-		// 	}else{
-		// 		lPrevMonLastDate = (lMonth===1) ? (isBigMon(lYear-1,lMonth-1) ? 30: 29) : (isBigMon(lYear,lMonth) ? 30: 29);
-		// 	}
-		// }
-		//填充阴历日期信息
-		// for(i=1 , j=1; i<=42; i++){
-		// 	if(lDay > prevMonDays){
-		// 		if(i <= isBigMon(lYear,lMonth)?30:29){
-		// 			lsList[i-1].lDay = lDay-prevMonDays+i;
-		// 			lsList[i-1].lMonth = lMonth;
-		// 			lsList[i-1].lYear = lYear;
-		// 		}else{
-		// 			if(isAfterLeap){
-		// 				lsList[i-1].lDay = j;
-		// 				if(lMonth === 12){
-		// 					lsList[i-1].lMonth = 1;
-		// 					lsList[i-1].lYear = lYear+1;
-		// 				}else{
-		// 					lsList[i-1].lMonth = lMonth+1;
-		// 					lsList[i-1].lYear = lYear;
-		// 				}
-		// 			}else{
-
-		// 			}
-		// 		}
-		// 	}else{
-		// 		if(i <= prevMonDays-lDay){
-		// 			lsList[i-1].lDay = lPrevMonLastDate - (prevMonDays-lDay)+i;
-		// 		}
-		// 	}
-		// }
-		console.log(lsList);
+		// console.log(lsList);
 		return lsList;
 	}
-	getL2SInfo(2016,1);
+	/**
+	 * [getCss 获取日历样式表]
+	 * @param  {[string]} url [样式地址]
+	 * @return {[type]}     [description]
+	 */
+	function getCss(url){
+		var
+			link = document.createElement('link'),
+			head = document.getElementsByTagName('head')[0];
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = url;
+		head.appendChild(link);
+	}
 	/**
 	 * [solarToLunar 根据阳历日期获取相应阴历日期]
 	 * @param  {[Integer]} year  [阳历年]
@@ -313,8 +434,14 @@ var kCal = function(config){
 			isAfterLeap : isAfterLeap
 		};
 	}
-	//获取该年指定月份的节气日期（阳历）
-	function getTremDate(year,month){
+	
+	/**
+	 * [getTermDate 获取该年指定月份的节气日期（阳历）]
+	 * @param  {[Integer]} year  [阳历年]
+	 * @param  {[Integer]} month [阳历月]
+	 * @return {[Array]}       [包含节气日期的数组]
+	 */
+	function getTermDate(year,month){
 	
 		var 
 			termString = lunarInfo.termInfo[year-1900],
@@ -360,7 +487,7 @@ var kCal = function(config){
 		
 		return [parseInt(termDay[month*2-2],10) , parseInt(termDay[month*2-1],10)];
 	}
-	console.log(getTremDate(2016,4));
+
 	/**
 	 * [lunarDay 返回该年份的阴历一整年的天数]
 	 * @param  {[Integer]} year [年份]
@@ -427,119 +554,7 @@ var kCal = function(config){
 			return false;
 		}
 	}
-	/**
-	 * [repeatCreateNode 重复生成多个节点]
-	 * @param  {[node]} parentNode [添加子节点的父节点]
-	 * @param  {[json]}   data       [如下所示,属性名为要添加的元素名，noneChild:表示有无子节点,textNode表示文本节点,当文本节点为数组时表示有多个元素需要生成，attribute表示该元素的属性
-	 *                               	{
-	 *										"option":{
-	 *											"noneChild":true,
-	 *											 textNode:[1900,...2010]
-	 *										}
-	 *									}
-	 *									{
-	 *										"span":{
-	 *											"noneChild":false,
-	 *											"childNode";{
-	 *												a":{
-	 *												   "noChild": true,
-	 *												   "textNode":"左减",
-	 *												   "attribute":{
-	 *													 "href":"javascript:;"
-	 *												   }
-	 *											  	}
-	 *											}
-	 *										}
-	 *									}
-	 *									{
-	 *										"div":{
-	 *											"a":{
-	 *												"noneChild": true,
-	 *												"textNode":"左减",
-	 *												"attribute":{
-	 *													"href":"javascript:;"
-	 *												}
-	 *											}
-	 *										}
-	 *									}
-	 *                               ]
-	 * @return {[type]}              []
-	 */
-	function repeatCreateNode(parentNode , data){
-		for(var eleName in data){
-			// if(typeof data.eleName === Array){
-			// 	data.eleName.forEach(function(item){
-			// 		var
-			// 			ele = document.createElement('"'+eleName+'"'),
-			// 			textNode = document.createTextNode('"'+item+'"');
-			// 		ele.appendChild(textNode);
-			// 		parentNode.appendChild(ele); 
-			// 	})
-			// }
-			// else if(typeof data.eleName === Object){
-			// 	var
-			// 		parentEle = document.createElement('"'+eleName+'"'),
-			// 	repeatCreateNode(parentEle , data.eleName); 
-			// }
-			// else if(typeof data.eleName === Number || typeof data.eleName === String){
-			// 	var
-			// 		childEle = document.createElement('"'+eleName+'"'),
-			// 		textNode = document.createTextNode('"'+data.eleName+'"');
-			// 	childEle.appendChild(textNode);
-			// }
-			// if(data.eleName.noneChild){
-			// 	var
-			// 		ele = document.createElement('"'+eleName+'"'),
-
-			// }
-		}
-	}
-	
-	/**
-	 * [createCal 根据年月日生成对应日历]
-	 * @param  {[number]} currentYear  [指定年份]
-	 * @param  {[number]} currentMonth [指定月份]
-	 * @param  {[number]} currentDate  [指定日期]
-	 * @return {[type]}              [description]
-	 */
-	function createCalBody(currentYear , currentMonth , currentDate){
-		// var
-		// 	week = countWeek(currentYear , currentMonth , 1),
-		// 	dateHtml = '<td>'+
-		// 					'<span>'+
-		// 						'<a href="javascript:;">1</a>'+
-		// 						'<label>立春</label>'+
-		// 						'<strong>二十七</strong>'+
-		// 				    '</span>'+
-		// 			    '</td>',
-	}
-	
-	/**
-	 * [countWeek 根据年月日计算星期]
-	 * @param  {[number]} year  [年]
-	 * @param  {[number]} month [月]
-	 * @param  {[number]} date  [日]
-	 * @return {[number]} week  [取值0,1,2...6依次代表星期一至星期日]
-	 */
-	function countWeek(year , month , date){
-		var
-			week;
-		if(year<1752 || (year<1752 && month<9) || (year==1752 && month==9 && date<3) ){
-			week = (date + 2*month + Math.floor(3*(month+1)/5) + year + Math.floor(year/4) + 5) % 7;
-		}else{
-			week = (date + 2*month + Math.floor(3*(month+1)/5) + year + Math.floor(year/4) - Math.floor(year/100) + Math.floor(year/400)) % 7;
-		}	
-		return week;
-	}
-
-
 
 };
 
-
-kCal({
-	currentDate:5,
-	currentMonth:4,
-	currentYear:2016
-});
 

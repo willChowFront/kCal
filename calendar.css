@@ -1,40 +1,125 @@
-#J_calWrap table thead span{
-	display: inline-block;
-	width: 60px;
-	line-height: 60px;
-	height: 60px;
-	border: 1px solid #233;
-	text-align: center;
-}
-
-#J_calWrap table tbody span {
-	position: relative;
-	display: inline-block;
-	width: 60px;
-	height: 80px;
-	border: 1px solid grey;
-}
-
-#J_calWrap table tbody span a {
-	display: inline-block;
+.k-cal-wrap div {
 	width: 100%;
-	height: 40px;
+}
+
+.k-cal-wrap ul {
+	width: 100%;
+	border-left:1px solid #bababa; 
+}
+
+.k-cal-wrap ul:after{
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.k-cal-wrap .cal-head {
+	width: 60%;
+	margin: 10px auto;
+	height: 20px;
+}
+
+.k-cal-wrap .cal-head select {
+	float: left;
+	height: 20px;
+	line-height: 20px;
+	font-size: 12px;
+	border: 1px solid #bababa;
 	text-align: center;
 }
 
-#J_calWrap table tbody span label {
-	position: absolute;
-	right: 0;
-	top: 8px;
+.k-cal-wrap .cal-head a {
+	float: left;
+	display: inline-block;
+	height: 18px;
 	width: 20px;
-	text-align: center;
-	font-size: 14px;
+	border: 1px solid #bababa;
 }
 
-#J_calWrap table tbody span strong {
+.k-cal-wrap  ul li {
+	float: left;
+	width: 14%;
+	text-align: center;
+	height: 60px;
+	font-size: 14px;
+	border-right: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+}
+
+.k-cal-wrap  .cal-date {
+	border-right: 1px solid #bababa;
+	border-bottom: 1px solid #bababa;
+	cursor: pointer;
+}
+
+.k-cal-wrap  .cal-date:hover {
+	-webkit-transform: scale(1.01);
+	-moz-transform: scale(1.01);
+	transform: scale(1.01);
+  	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+  	-webkit-box-shadow: 0 -1px 10px rgba(0,0,0,.5);
+  	-moz-box-shadow: 0 -1px 10px rgba(0,0,0,.5);
+	box-shadow: 0 -1px 10px rgba(0,0,0,.5); 
+}
+
+.k-cal-wrap .week-name {
+	line-height: 40px;
+	height: 40px;
+	background-color:#327fc0;
+	background-color: rgba(42,192,235,0.4);
+	border-right: 1px solid #bababa;
+	border-top:1px solid #bababa;
+	border-bottom:1px solid #bababa;
+}
+
+.k-cal-wrap  ul li a{
 	display: inline-block;
 	width: 100%;
-	height: 40px;
-	line-height: 40px;
-	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	font-weight: bold;
+	font-size: 16px;
+	color: #000;
+}
+
+.k-cal-wrap  ul li a:hover{
+	text-decoration: none;
+}
+
+.k-cal-wrap  .prev-year {
+	background: url("prev-next.gif") no-repeat 2px 0;
+}
+
+.k-cal-wrap  .next-year {
+	background: url("prev-next.gif") no-repeat 2px -25px;
+	margin-right: 10px;
+}
+
+.k-cal-wrap  .prev-month {
+	background: url("prev-next.gif") no-repeat 2px 0;
+}
+
+.k-cal-wrap  .next-month {
+	background: url("prev-next.gif") no-repeat 2px -25px;
+}
+
+.k-cal-wrap  ul li span {
+	display: inline-block;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+}
+
+.k-cal-wrap  ul li .term {
+	color: red;
+}
+
+.k-cal-wrap ul .today {
+	background: url("today.gif") no-repeat 12px 3px;
 }
