@@ -146,6 +146,9 @@ var kCal = function(config){
 			ulEle = document.createElement('ul');
 		
 		headDiv.className = 'cal-head';	
+		while(wrapEle.hasChildNodes()){
+			wrapEle.removeChild(wrapEle.firstChild);
+		}
 
 		aEle = document.createElement('a');
 		aEle.href = "javascript:;";
@@ -241,10 +244,10 @@ var kCal = function(config){
 			}
 			ulEle.appendChild(liEle);
 		}
-
-	}
-	createStaticCal("J_calWrap",2016,4);
 	eventHandler();
+	}
+	createStaticCal(calId,2016,4);
+	
 	/**
 	 * [eventHandler 添加事件处理]
 	 * @return {[type]} [description]
@@ -260,8 +263,10 @@ var kCal = function(config){
 
 		prevYearBtn.addEventListener('click',function(ev){
 			var
-				currentYear = yearSelect.value;
-			
+				currentYear = yearSelect.value,
+				currentMonth = monthSelect.value;
+			yearSelect.childNodes[currentYear-1900].selected = true;
+			createStaticCal(calId, currentYear-1, currentMonth);
 		},false);
 	}
 	/**
