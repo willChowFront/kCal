@@ -124,31 +124,21 @@ var kCal = function(config){
 		currentMonth = config.currentMonth ? config.currentMonth : new Date().getMonth()+1,
 		currentYear = config.currentYear ? config.currentYear : new Date().getFullYear(),
 		cssUrl = config.cssUrl;
-	getCss(cssUrl);//获取默认样式
+
 	/**
-	 * [createStaticCal 生成万年历html]
-	 * @param  {[string]} calId        [万年历的父元素id]
-	 * @param  {[number]} currentYear  [指定年份]
-	 * @param  {[number]} currentMonth [指定月份]
+	 * [createCalHead 生成万年历头部html]
 	 * @return {[type]}              [description]
-	 *
-	 * 
 	 */
-	function createStaticCal(calId,currentYear,currentMonth){
+	function createCalHead () {
 		var
-			liEle,textNode,aEle,spanEle,lsInfo,optionEle,
-			lsList = getL2SInfo(currentYear,currentMonth),
-			yearSelectEle = document.createElement('select'),
-			monthSelectEle = document.createElement('select'),
-			wrapEle = document.getElementById(calId),
+			textNode,aEle,spanEle,lsInfo,optionEle,
 			headDiv = document.createElement('div'),
+			wrapEle = document.getElementById(calId),
+			yearSelectEle = document.createElement('select'),
 			bodyDiv = document.createElement('div'),
-			ulEle = document.createElement('ul');
-		
-		headDiv.className = 'cal-head';	
-		while(wrapEle.hasChildNodes()){
-			wrapEle.removeChild(wrapEle.firstChild);
-		}
+			monthSelectEle = document.createElement('select');
+		headDiv.className = 'cal-head';
+		bodyDiv.id = 'J_calBody';
 
 		aEle = document.createElement('a');
 		aEle.href = "javascript:;";
@@ -194,7 +184,7 @@ var kCal = function(config){
 			}
 		}
 		monthSelectEle.className = 'cal-month';
-	monthSelectEle.id = 'J_calMonth';
+		monthSelectEle.id = 'J_calMonth';
 		headDiv.appendChild(monthSelectEle);
 		aEle = document.createElement('a');
 		aEle.href = "javascript:;";
@@ -205,7 +195,27 @@ var kCal = function(config){
 		headDiv.appendChild(aEle);
 		
 		wrapEle.appendChild(headDiv);
+		wrapEle.appendChild(bodyDiv);	
+	}
+	/**
+	 * [createCalBody 生成万年历日期主体部分]
+	 * @param  {[string]} calId        [万年历的父元素id]
+	 * @param  {[number]} currentYear  [指定年份]
+	 * @param  {[number]} currentMonth [指定月份]
+	 * @return {[type]}              [description]
+	 */
+	function createCalBody(calId,currentYear,currentMonth){
+		var
+			liEle,textNode,aEle,spanEle,lsInfo,optionEle,
+			lsList = getL2SInfo(currentYear,currentMonth),
+			wrapEle = document.getElementById(calId),
+			bodyDiv = document.getElementById('J_calBody'),
+			ulEle = document.createElement('ul');
 		
+		while(bodyDiv.hasChildNodes()){
+			bodyDiv.removeChild(bodyDiv.firstChild);
+		}
+
 		for(i=0; i<7; i++){
 			liEle = document.createElement('li');
 			liEle.className = 'week-name';
@@ -244,10 +254,11 @@ var kCal = function(config){
 			}
 			ulEle.appendChild(liEle);
 		}
-	eventHandler();
 	}
-	createStaticCal(calId,2016,4);
-	
+	//生成指定日期阳历阴历详细信息html
+	function createCalDetail(){}
+	//生产北京时间
+	function createTime(){};
 	/**
 	 * [eventHandler 添加事件处理]
 	 * @return {[type]} [description]
@@ -263,11 +274,63 @@ var kCal = function(config){
 
 		prevYearBtn.addEventListener('click',function(ev){
 			var
-				currentYear = yearSelect.value,
-				currentMonth = monthSelect.value;
-			yearSelect.childNodes[currentYear-1900].selected = true;
-			createStaticCal(calId, currentYear-1, currentMonth);
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);
+			yearSelect.childNodes[currentYear-1900-1].selected = true;
+			createCalBody(calId, currentYear-1, currentMonth);
 		},false);
+
+		nextYearBtn.addEventListener('click', function(ev){
+			var
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);
+			yearSelect.childNodes[currentYear-1900+1].selected = true;
+			createCalBody(calId, currentYear+1, currentMonth);
+		}, false);
+
+		prevMonthBtn.addEventListener('click', function(ev){
+			var
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);
+			
+			if(currentMonth === 1){
+				yearSelect.childNodes[currentYear-1900-1].selected = true;
+				monthSelect.childNodes[11].selected = true;
+				createCalBody(calId, currentYear-1, 12);
+			}else{
+				monthSelect.childNodes[currentMonth-2].selected = true;
+				createCalBody(calId, currentYear, currentMonth-1);
+			}
+		}, false);
+
+		nextMonthBtn.addEventListener('click', function(ev){
+			var
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);
+			
+			if(currentMonth === 12){
+				yearSelect.childNodes[currentYear-1900+1].selected = true;
+				monthSelect.childNodes[0].selected = true;
+				createCalBody(calId, currentYear+1, 12);
+			}else{
+				monthSelect.childNodes[currentMonth].selected = true;
+				createCalBody(calId, currentYear, currentMonth+1);
+			}
+		}, false);
+
+		yearSelect.addEventListener('change', function(ev){
+			var
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);
+			createCalBody(calId, currentYear, currentMonth);
+		}, false);
+
+		monthSelect.addEventListener('change', function(ev){
+			var
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);
+			createCalBody(calId, currentYear, currentMonth);
+		}, false);
 	}
 	/**
 	 * [lsList 返回显示万年历主体日期列表所需的阳历，阴历信息 ]
@@ -280,7 +343,7 @@ var kCal = function(config){
 			lsList = new Array(42),
 			prevMonLastDate,//参数指定月份上一月份的最后日期（阳历）
 			prevMonDays, nextMonDays,//日期列表所需显示阳历上一月份与下一月份的天数
-			week = new Date(year , month-1).getDay(),//1,2..7分别指向星期一，二....日
+			week = new Date(year , month-1).getDay(),
 			isLeap = isLeapYear(year),
 			monDay = [31,28,31,30,31,30,31,31,30,31,30,31],//阳历平年每月的天数
 			leapMonDay = [31,29,31,30,31,30,31,31,30,31,30,31],//阳历闰年每月的天数
@@ -418,7 +481,7 @@ var kCal = function(config){
 			if(i === lLeapMonth && !isAfterLeap){
 				temp = leapMonth(lYear).leapDays;
 				i --;
-				isAfterLeap = ture;
+				isAfterLeap = true;
 			}else{
 				temp = isBigMon(lYear , i) ? 30 : 29;
 			}
@@ -447,11 +510,10 @@ var kCal = function(config){
 	 * @return {[Array]}       [包含节气日期的数组]
 	 */
 	function getTermDate(year,month){
-	
 		var 
 			termString = lunarInfo.termInfo[year-1900],
 			termList = [
-				parseInt('0x'+termString.substr(0,5),16).toString() ,
+				parseInt('0x'+termString.substr(0,5),16).toString(),
 				parseInt('0x'+termString.substr(5,5),16).toString(),
 				parseInt('0x'+termString.substr(10,5),16).toString(),
 				parseInt('0x'+termString.substr(15,5),16).toString(),
@@ -559,6 +621,16 @@ var kCal = function(config){
 			return false;
 		}
 	}
+	/**
+	 * [init ]
+	 * @return {[type]}              [description]
+	 */
+	(function init(){
+		createCalHead();
+		createCalBody(calId,currentYear,currentMonth);
+		getCss(cssUrl);
+		eventHandler()
+	})();
 
 };
 
