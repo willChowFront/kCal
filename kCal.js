@@ -166,7 +166,7 @@ var kCal = function(config){
 	
 	function createCalHead(currentYear,currentMonth) {
 		var
-			textNode,aEle,spanEle,lsInfo,optionEle,
+			textNode,aEle,spanEle,lsInfo,optionEle,selectWrapDiv,
 			headDiv = document.createElement('div'),
 			wrapEle = document.getElementById(calId),
 			yearSelectEle = document.createElement('select'),
@@ -198,7 +198,10 @@ var kCal = function(config){
 		}
 		yearSelectEle.className = 'cal-year';
 		yearSelectEle.id = 'J_calYear';
-		headDiv.appendChild(yearSelectEle);
+		selectWrapDiv = document.createElement('div');
+		selectWrapDiv.className = 'year-select-wrap';
+		selectWrapDiv.appendChild(yearSelectEle);
+		headDiv.appendChild(selectWrapDiv);
 		aEle = document.createElement('a');
 		aEle.href = "javascript:;";
 		aEle.className = 'prev-year';
@@ -226,7 +229,10 @@ var kCal = function(config){
 		}
 		monthSelectEle.className = 'cal-month';
 		monthSelectEle.id = 'J_calMonth';
-		headDiv.appendChild(monthSelectEle);
+		selectWrapDiv = document.createElement('div');
+		selectWrapDiv.className = 'month-select-wrap';
+		selectWrapDiv.appendChild(monthSelectEle);
+		headDiv.appendChild(selectWrapDiv);
 		aEle = document.createElement('a');
 		aEle.href = "javascript:;";
 		aEle.className = 'prev-year';
@@ -371,7 +377,7 @@ var kCal = function(config){
 		goodBadDiv.className = 'good-bad';
 		detailDiv.appendChild(goodBadDiv);
 
-		getCanDolist(goodBadUrl, currentYear, currentMonth, currentDate);
+		// getCanDolist(goodBadUrl, currentYear, currentMonth, currentDate);
 	}
 	
 	/**
@@ -536,13 +542,18 @@ var kCal = function(config){
 			choosedMonth = parseInt(choosedMonth , 10);
 			choosedYear = parseInt(choosedYear , 10);
 			if(choosedMonth || choosedDate){
-				if(choosedMonth !== currentMonth){
-					createCalHead(choosedYear, choosedMonth);
-					createCalBody(calId, choosedYear, choosedMonth);
-					createCalDetail(calId, choosedYear, choosedMonth, choosedDate);
-					eventHandler();
-				}else{
+				if(choosedYear === 1900 && choosedMonth===12 && choosedDate === 31){
+					//为保证可用性不允许查询1901-01-01之前的日历
 					createCalDetail(calId,currentYear, currentMonth,choosedDate);
+				}else{
+					if(choosedMonth !== currentMonth){
+						createCalHead(choosedYear, choosedMonth);
+						createCalBody(calId, choosedYear, choosedMonth);
+						createCalDetail(calId, choosedYear, choosedMonth, choosedDate);
+						eventHandler();
+					}else{
+						createCalDetail(calId,currentYear, currentMonth,choosedDate);
+					}
 				}
 			}		
 		}, false);
