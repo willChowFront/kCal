@@ -512,3 +512,4 @@ var calendar = {
 		return calendar.solar2lunar(cY,cM,cD);
 	}	
 };
+

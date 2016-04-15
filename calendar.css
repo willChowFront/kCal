@@ -134,6 +134,10 @@
 	color: red;
 }
 
+.k-cal-wrap  ul li .solar-holiday {
+	color: #132eb6;
+}
+
 .k-cal-wrap ul .today {
 	background: url("today.gif") no-repeat 51% 9%;
 }
@@ -174,4 +178,44 @@
 	font-size: 14px;
 	text-align: center;
 	color: rgb(153, 153, 153);
+}
+
+.k-cal-wrap .date-detail .good-bad:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.date-detail .good-bad {
+	width: 100%;
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid #bababa;
+}
+
+.date-detail .good-bad .good-list {
+	float: left;
+	height: 25px;
+	line-height: 25px;
+	width: 50%;
+	font-size: 12px;
+	color: rgb(176, 67, 67);
+	text-align: center;
+}
+
+.date-detail .good-bad .bad-list {
+	float: left;
+	height: 25px;
+	line-height: 25px;
+	width: 50%;
+	font-size: 12px;
+	color: rgb(91, 91, 91);
+	text-align: center;
+}
+
+.not-current-month {
+	background-color:#e0efc4; 
 }

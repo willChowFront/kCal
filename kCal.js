@@ -140,14 +140,24 @@ var kCal = function(config){
 				 * [chineseMonthName 中文月份速查表]
 				 * @type {Array}
 				 */
-				chineseMonthName:["\u6b63","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d","\u5341","\u51ac","\u814a"]
+				chineseMonthName:["\u6b63","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d","\u5341","\u51ac","\u814a"],
+				/**
+				 * [solarHoliday 阳历节假日]
+				 * @type {Object}
+				 */
+				solarHoliday : {
+					"11" :"元旦","214":"情人节","38":"妇女节","312": "植树节","315": "消费者权益日","41": "愚人节","51": "劳动节","54": "青年节",
+    				"512":" 护士节", "61": "儿童节","71": "建党节","81":" 建军节","910": "教师节","928":" 孔子诞辰","101": "国庆节",
+					"106":" 老人节","1024":"联合国日","1224": "平安夜","1225":"圣诞节"
+				}
 		},
 		now = new Date(),//当日日期
-		calId = config.calId ? config.calId : 0,
+		calId = config.calId ? config.calId : -1,
 		currentDate = config.currentDate ? config.currentDate : new Date().getDate(),
 		currentMonth = config.currentMonth ? config.currentMonth : new Date().getMonth()+1,
 		currentYear = config.currentYear ? config.currentYear : new Date().getFullYear(),
-		cssUrl = config.cssUrl;
+		cssUrl = config.cssUrl ? config.cssUrl : -1,
+		goodBadUrl = config.goodBadUrl ? config.goodBadUrl : -1;
 
 	/**
 	 * [createCalHead 生成万年历头部html]
@@ -175,7 +185,7 @@ var kCal = function(config){
 		aEle.className = 'prev-year';
 		aEle.id = 'J_prevYear';
 		headDiv.appendChild(aEle);
-		for(var i=1900; i<=2100; i++){
+		for(var i=1901; i<=2100; i++){
 			optionEle = document.createElement('option');
 			textNode = document.createTextNode(''+i+'年');
 			optionEle.appendChild(textNode);
@@ -235,62 +245,73 @@ var kCal = function(config){
 	 * @return {[type]}              [description]
 	 */
 	function createCalBody(calId,currentYear,currentMonth){
-		var
-			liEle,textNode,aEle,spanEle,lsInfo,optionEle,
-			lsList = getL2SInfo(currentYear,currentMonth),
-			wrapEle = document.getElementById(calId),
-			bodyDiv = document.getElementById('J_calBody'),
-			ulEle = document.createElement('ul'),
-			detailDiv = document.createElement('div');
-		detailDiv.id = 'J_dateDetail';
-		detailDiv.className = 'date-detail';
-		
-		while(bodyDiv.hasChildNodes()){
-			bodyDiv.removeChild(bodyDiv.firstChild);
-		}
-
-		for(i=0; i<7; i++){
-			liEle = document.createElement('li');
-			liEle.className = 'week-name';
-			textNode = document.createTextNode(lunarInfo.chineseWeekName[i]);
-			liEle.appendChild(textNode);
-			ulEle.appendChild(liEle);
-		}
-		
-		for(i=0; i<lsList.length; i++){
-			lsInfo = lsList[i];
-			liEle = document.createElement('li');
+		if(currentYear===2100 && currentMonth===12){
+			alert('暂不支持2100-12的日历查询');
+		}else{
+			var
+				liEle,textNode,aEle,spanEle,lsInfo,optionEle,
+				lsList = getL2SInfo(currentYear,currentMonth),
+				wrapEle = document.getElementById(calId),
+				bodyDiv = document.getElementById('J_calBody'),
+				ulEle = document.createElement('ul'),
+				detailDiv = document.createElement('div');
+			detailDiv.id = 'J_dateDetail';
+			detailDiv.className = 'date-detail';
 			
-			aEle = document.createElement('a');
-			textNode = document.createTextNode(lsInfo.sDay);
-			aEle.setAttribute('year', lsInfo.sYear);
-			aEle.setAttribute('month', lsInfo.sMon);
-			aEle.appendChild(textNode);
-			aEle.href = "javascript:;";
-
-			spanEle = document.createElement('span');
-			if(!lsInfo.term){
-				textNode = document.createTextNode(lsInfo.lDay);
-			}else{
-				textNode = document.createTextNode(lsInfo.term);
-				spanEle.className = 'term';
+			while(bodyDiv.hasChildNodes()){
+				bodyDiv.removeChild(bodyDiv.firstChild);
 			}
-			spanEle.appendChild(textNode);
+
+			for(i=0; i<7; i++){
+				liEle = document.createElement('li');
+				liEle.className = 'week-name';
+				textNode = document.createTextNode(lunarInfo.chineseWeekName[i]);
+				liEle.appendChild(textNode);
+				ulEle.appendChild(liEle);
+			}
 			
-			liEle.appendChild(aEle);
-			liEle.appendChild(spanEle);
-			liEle.className = 'cal-date';
-			if(lsInfo.isToday){
-				liEle.className = liEle.className + ' today';
-			}
-			ulEle.appendChild(liEle);
-		}
+			for(i=0; i<lsList.length; i++){
+				lsInfo = lsList[i];
+				liEle = document.createElement('li');
+				
+				aEle = document.createElement('a');
+				textNode = document.createTextNode(lsInfo.sDay);
+				aEle.setAttribute('year', lsInfo.sYear);
+				aEle.setAttribute('month', lsInfo.sMon);
+				aEle.appendChild(textNode);
+				aEle.href = "javascript:;";
 
-		bodyDiv.appendChild(ulEle);
-		if(! document.getElementById('J_dateDetail')){
-			wrapEle.appendChild(detailDiv);
+				spanEle = document.createElement('span');
+				if(!lsInfo.term){
+					textNode = document.createTextNode(lsInfo.lDay);
+				}else{
+					textNode = document.createTextNode(lsInfo.term);
+					spanEle.className = 'term';
+				}
+				if(lsInfo.solarHol){
+					textNode = document.createTextNode(lsInfo.solarHol);
+					spanEle.className = 'solar-holiday';
+				}
+				spanEle.appendChild(textNode);
+				
+				liEle.appendChild(aEle);
+				liEle.appendChild(spanEle);
+				liEle.className = 'cal-date';
+				if(lsInfo.isToday){
+					liEle.className = liEle.className + ' today';
+				}
+				if(lsInfo.notCurrentMonth){
+					liEle.className = liEle.className + ' not-current-month';
+				}
+				ulEle.appendChild(liEle);
+			}
+
+			bodyDiv.appendChild(ulEle);
+			if(! document.getElementById('J_dateDetail')){
+				wrapEle.appendChild(detailDiv);
+			}
+			
 		}
-		
 	}
 	/**
 	 * [createCalDetail 生成指定日期阴历&阳历详细信息html]
@@ -304,8 +325,9 @@ var kCal = function(config){
 			spanEle = document.createElement('span'),
 			strontEle = document.createElement('strong'),
 			wrapEle = document.getElementById(calId),
+			goodBadDiv = document.createElement('div'),//宜忌事项表
 			detailDiv = document.getElementById('J_dateDetail');
-		
+	
 		while(detailDiv.hasChildNodes()){
 			detailDiv.removeChild(detailDiv.firstChild);
 		}
@@ -332,10 +354,23 @@ var kCal = function(config){
 		pEle.appendChild(textNode);
 		detailDiv.appendChild(pEle);
 
+		if(lunarInfo.solarHoliday[currentMonth+''+currentDate]){
+			textNode = document.createTextNode(lunarInfo.solarHoliday[currentMonth+''+currentDate]);
+			pEle = document.createElement('p');
+			pEle.appendChild(textNode);
+			detailDiv.appendChild(pEle);
+		}
+
 		textNode = document.createTextNode(lunarYMD.zodiac+'年');
 		pEle = document.createElement('p');
 		pEle.appendChild(textNode);
 		detailDiv.appendChild(pEle);
+
+		goodBadDiv.id = 'J_goodBad';
+		goodBadDiv.className = 'good-bad';
+		detailDiv.appendChild(goodBadDiv);
+
+		getCanDolist(goodBadUrl, currentYear, currentMonth, currentDate);
 	}
 	
 	/**
@@ -343,12 +378,59 @@ var kCal = function(config){
 	 * @return {[type]} [description]
 	 */
 	function createTime(){}
-	// 获取宜忌事列表
+	/**
+	 * [getCanDolist 获取宜忌事列表]
+	 * @param  {[type]} url          [获取jsoN的地址]
+	 * @param  {[type]} currentYear  [description]
+	 * @param  {[type]} currentMonth [description]
+	 * @param  {[type]} currentDate  [description]
+	 * @return {[type]}              [description]
+	 */
 	function getCanDolist(url,currentYear,currentMonth,currentDate){
 		var
+			goodBad,
+			param = JSON.stringify({currentYear:currentYear,currentDate:currentDate,currentMonth:currentMonth}),
+			goodBadDiv = document.getElementById('J_goodBad'),
+			olEle, textNode, liEle, 
 			xhr = new XMLHttpRequest();
-		xhr.open('get',url,false);
-		xhr.send()
+
+		xhr.open('get',url,true);
+		xhr.send(param);
+		xhr.onload = function(){
+			if(xhr.readyState == 4){
+				if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+					goodBad = JSON.parse(xhr.responseText);
+					
+					olEle = document.createElement('ol');
+					olEle.className = 'good-list';
+					liEle = document.createElement('li');
+					textNode = document.createTextNode('宜');
+					liEle.appendChild(textNode);
+					olEle.appendChild(liEle);
+					goodBad.good.forEach(function(item){
+						liEle = document.createElement('li');
+						textNode = document.createTextNode(''+item+'');
+						liEle.appendChild(textNode);
+						olEle.appendChild(liEle);
+					});
+					goodBadDiv.appendChild(olEle);
+
+					olEle = document.createElement('ol');
+					olEle.className = 'bad-list';
+					liEle = document.createElement('li');
+					textNode = document.createTextNode('忌');
+					liEle.appendChild(textNode);
+					olEle.appendChild(liEle);
+					goodBad.bad.forEach(function(item){
+						liEle = document.createElement('li');
+						textNode = document.createTextNode(''+item+'');
+						liEle.appendChild(textNode);
+						olEle.appendChild(liEle);
+					});
+					goodBadDiv.appendChild(olEle);
+				}	
+			}
+		};
 	}
 	/**
 	 * [eventHandler 添加事件处理]
@@ -368,16 +450,21 @@ var kCal = function(config){
 			var
 				currentYear = parseInt(yearSelect.value,10),
 				currentMonth = parseInt(monthSelect.value,10);
-			yearSelect.childNodes[currentYear-1900-1].selected = true;
-			createCalBody(calId, currentYear-1, currentMonth);
+			if(currentYear > 1900){
+				console.log(yearSelect.childNodes[currentYear-1900-1]);
+				yearSelect.childNodes[currentYear-1900-2].selected = true;
+				createCalBody(calId, currentYear-1, currentMonth);
+			}
 		},false);
 
 		nextYearBtn.addEventListener('click', function(ev){
 			var
 				currentYear = parseInt(yearSelect.value,10),
 				currentMonth = parseInt(monthSelect.value,10);
-			yearSelect.childNodes[currentYear-1900+1].selected = true;
-			createCalBody(calId, currentYear+1, currentMonth);
+			if(currentYear != 2100){
+				yearSelect.childNodes[currentYear-1900].selected = true;
+				createCalBody(calId, currentYear+1, currentMonth);
+			}
 		}, false);
 
 		prevMonthBtn.addEventListener('click', function(ev){
@@ -386,9 +473,12 @@ var kCal = function(config){
 				currentMonth = parseInt(monthSelect.value,10);
 			
 			if(currentMonth === 1){
-				yearSelect.childNodes[currentYear-1900-1].selected = true;
-				monthSelect.childNodes[11].selected = true;
-				createCalBody(calId, currentYear-1, 12);
+				if(currentYear>1901){
+					yearSelect.childNodes[currentYear-1900-2].selected = true;
+					monthSelect.childNodes[11].selected = true;
+					createCalBody(calId, currentYear-1, 12);
+				}
+				
 			}else{
 				monthSelect.childNodes[currentMonth-2].selected = true;
 				createCalBody(calId, currentYear, currentMonth-1);
@@ -400,8 +490,8 @@ var kCal = function(config){
 				currentYear = parseInt(yearSelect.value,10),
 				currentMonth = parseInt(monthSelect.value,10);
 			
-			if(currentMonth === 12){
-				yearSelect.childNodes[currentYear-1900+1].selected = true;
+			if(currentMonth === 12){	
+				yearSelect.childNodes[currentYear-1900].selected = true;
 				monthSelect.childNodes[0].selected = true;
 				createCalBody(calId, currentYear+1, 12);
 			}else{
@@ -495,6 +585,7 @@ var kCal = function(config){
 		//填充阳历日期信息
 		for(var i=1 , j=1 ,k=1; i<=42; i++){
 			var 
+				solarHol,
 				lsInfo = {};
 			if(i <= prevMonDays){
 				if(month === 1){
@@ -505,11 +596,16 @@ var kCal = function(config){
 					lsInfo.sYear = year;
 				}
 				lsInfo.sDay = prevMonLastDate - prevMonDays + i;
+				lsInfo.notCurrentMonth = true;
 				if(lsInfo.sDay === prevMonTermDays[1]){
 					lsInfo.term = lunarInfo.chineseTerm[2*lsInfo.sMon-1];
 				}
 				if(lsInfo.sDay===now.getDate() && lsInfo.sMon===now.getMonth()+1 && lsInfo.sYear===now.getFullYear()){
 					lsInfo.isToday = true;
+				}
+				solarHol = lsInfo.sMon+''+lsInfo.sDay;
+				if(lunarInfo.solarHoliday[solarHol]){
+					lsInfo.solarHol = lunarInfo.solarHoliday[solarHol];
 				}
 			}else{
 				if(i > thisMonDays+prevMonDays && j<=nextMonDays){
@@ -530,6 +626,13 @@ var kCal = function(config){
 					if(lsInfo.sDay===now.getDate() && lsInfo.sMon===now.getMonth()+1 && lsInfo.sYear===now.getFullYear()){
 						lsInfo.isToday = true;
 					}
+					lsInfo.notCurrentMonth = true;
+
+					solarHol = lsInfo.sMon+''+lsInfo.sDay;
+					if(lunarInfo.solarHoliday[solarHol]){
+						lsInfo.solarHol = lunarInfo.solarHoliday[solarHol];
+					}
+
 					j ++;
 				}else{
 					lsInfo.sMon = month;
@@ -544,6 +647,12 @@ var kCal = function(config){
 					if(lsInfo.sDay===now.getDate() && lsInfo.sMon===now.getMonth()+1 && lsInfo.sYear===now.getFullYear()){
 						lsInfo.isToday = true;
 					}
+					
+					solarHol = lsInfo.sMon+''+lsInfo.sDay;
+					if(lunarInfo.solarHoliday[solarHol]){
+						lsInfo.solarHol = lunarInfo.solarHoliday[solarHol];
+					}
+
 					k++;
 				}
 			}
@@ -659,6 +768,7 @@ var kCal = function(config){
 	 * @return {[Array]}       [包含节气日期的数组]
 	 */
 	function getTermDate(year,month){
+		
 		var 
 			termString = lunarInfo.termInfo[year-1900],
 			termList = [
@@ -700,7 +810,6 @@ var kCal = function(config){
 				termList[5].substr(3,1),
 				termList[5].substr(4,2),
 			];
-		
 		return [parseInt(termDay[month*2-2],10) , parseInt(termDay[month*2-1],10)];
 	}
 
