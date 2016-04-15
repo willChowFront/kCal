@@ -159,11 +159,23 @@ var kCal = function(config){
 		cssUrl = config.cssUrl ? config.cssUrl : -1,
 		goodBadUrl = config.goodBadUrl ? config.goodBadUrl : -1;
 
+	if(calId === -1){
+		console.log('ERROR:万年历id未传入');
+		return -1;
+	}
+	if(cssUrl === -1){
+		console.log('ERROR:css样式url未指定');
+		return -1;
+	}
+	if(goodBadUrl === -1){
+		console.log('ERROR:获取宜忌事列表ajax请求地址未指定');
+		return -1;
+	}
+
 	/**
 	 * [createCalHead 生成万年历头部html]
 	 * @return {[type]}              [description]
 	 */
-	
 	function createCalHead(currentYear,currentMonth) {
 		var
 			textNode,aEle,spanEle,lsInfo,optionEle,selectWrapDiv,
@@ -254,6 +266,7 @@ var kCal = function(config){
 	function createCalBody(calId,currentYear,currentMonth){
 		if(currentYear===2100 && currentMonth===12){
 			alert('暂不支持2100-12的日历查询');
+			window.location.reload();
 		}else{
 			var
 				liEle,textNode,aEle,spanEle,lsInfo,optionEle,
@@ -380,11 +393,6 @@ var kCal = function(config){
 		// getCanDolist(goodBadUrl, currentYear, currentMonth, currentDate);
 	}
 	
-	/**
-	 * [createTime 生成北京时间]
-	 * @return {[type]} [description]
-	 */
-	function createTime(){}
 	/**
 	 * [getCanDolist 获取宜忌事列表]
 	 * @param  {[type]} url          [获取jsoN的地址]
