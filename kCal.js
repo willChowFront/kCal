@@ -174,8 +174,9 @@ var kCal = function(config){
 			monthSelectEle = document.createElement('select');
 		
 		wrapEle.innerHTML = '';
-
-		wrapEle.className = wrapEle.className + ' k-cal-wrap';//方便为万年历添加样式。
+		if(!(wrapEle.className.indexOf('k-cal-wrap')>0)){
+			wrapEle.className = wrapEle.className + ' k-cal-wrap';//方便为万年历添加样式。
+		}
 		headDiv.className = 'cal-head';
 		bodyDiv.id = 'J_calBody';
 		bodyDiv.className = 'cal-body';
@@ -534,15 +535,16 @@ var kCal = function(config){
 			choosedDate = parseInt(choosedDate , 10);
 			choosedMonth = parseInt(choosedMonth , 10);
 			choosedYear = parseInt(choosedYear , 10);
-			
-			if(choosedMonth !== currentMonth){
-				createCalHead(choosedYear, choosedMonth);
-				createCalBody(calId, choosedYear, choosedMonth);
-				createCalDetail(calId, choosedYear, choosedMonth, choosedDate);
-				eventHandler();
-			}else{
-				createCalDetail(calId,currentYear, currentMonth,choosedDate);
-			}
+			if(choosedMonth || choosedDate){
+				if(choosedMonth !== currentMonth){
+					createCalHead(choosedYear, choosedMonth);
+					createCalBody(calId, choosedYear, choosedMonth);
+					createCalDetail(calId, choosedYear, choosedMonth, choosedDate);
+					eventHandler();
+				}else{
+					createCalDetail(calId,currentYear, currentMonth,choosedDate);
+				}
+			}		
 		}, false);
 	}
 	/**
