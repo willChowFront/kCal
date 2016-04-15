@@ -119,7 +119,7 @@ var kCal = function(config){
 				 * [chineseLunarDate 农历日期速查表]
 				 * @type {Array}
 				 */
-				chineseLunarDate : ["\u521d\u4e00","\u521d\u4e8c","\u521d\u4e09","\u521d\u56db","\u521d\u4e94","\u521d\u516d","\u521d\u4e03","\u521d\u516b","\u521d\u4e5d","\u521d\u5341","\u5341 \u4e00","\u5341\u4e8c","\u5341\u4e09","\u5341\u56db","\u5341\u4e94","\u5341\u516d","\u5341\u4e03","\u5341\u516b","\u5341\u4e5d","\u5eff\u5341","\u5eff\u4e00","\u5eff\u4e8c","\u5eff\u4e09","\u5eff\u56db","\u4e94","\u5eff\u516d","\u5eff\u4e03","\u5eff\u516b","\u5eff\u4e5d","\u5eff\u5341","\u5345"],
+				chineseLunarDate : ["\u521d\u4e00","\u521d\u4e8c","\u521d\u4e09","\u521d\u56db","\u521d\u4e94","\u521d\u516d","\u521d\u4e03","\u521d\u516b","\u521d\u4e5d","\u521d\u5341","\u5341 \u4e00","\u5341\u4e8c","\u5341\u4e09","\u5341\u56db","\u5341\u4e94","\u5341\u516d","\u5341\u4e03","\u5341\u516b","\u5341\u4e5d","\u5eff\u5341","\u5eff\u4e00","\u5eff\u4e8c","\u5eff\u4e09","\u5eff\u56db","\u5eff\u4e94","\u5eff\u516d","\u5eff\u4e03","\u5eff\u516b","\u5eff\u4e5d","\u5eff\u5341","\u5345"],
 				chineseWeekName : ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"],
 			     /**
 			      * [Gan 天干地支之天干速查表 "甲","乙","丙","丁","戊","己","庚","辛","壬","癸"]
@@ -154,7 +154,7 @@ var kCal = function(config){
 	 * @return {[type]}              [description]
 	 */
 	
-	function createCalHead() {
+	function createCalHead(currentYear,currentMonth) {
 		var
 			textNode,aEle,spanEle,lsInfo,optionEle,
 			headDiv = document.createElement('div'),
@@ -162,6 +162,10 @@ var kCal = function(config){
 			yearSelectEle = document.createElement('select'),
 			bodyDiv = document.createElement('div'),
 			monthSelectEle = document.createElement('select');
+		
+		wrapEle.innerHTML = '';
+
+		wrapEle.className = wrapEle.className + ' k-cal-wrap';//方便为万年历添加样式。
 		headDiv.className = 'cal-head';
 		bodyDiv.id = 'J_calBody';
 		bodyDiv.className = 'cal-body';
@@ -177,7 +181,7 @@ var kCal = function(config){
 			optionEle.appendChild(textNode);
 			optionEle.value = i;
 			yearSelectEle.appendChild(optionEle);
-			if(i === now.getFullYear()){
+			if(i === currentYear){
 				optionEle.selected = true;
 			}
 		}
@@ -205,7 +209,7 @@ var kCal = function(config){
 			optionEle.appendChild(textNode);
 			optionEle.value = i;
 			monthSelectEle.appendChild(optionEle);
-			if(i === now.getMonth()+1){
+			if(i === currentMonth){
 				optionEle.selected = true;
 			}
 		}
@@ -236,7 +240,10 @@ var kCal = function(config){
 			lsList = getL2SInfo(currentYear,currentMonth),
 			wrapEle = document.getElementById(calId),
 			bodyDiv = document.getElementById('J_calBody'),
-			ulEle = document.createElement('ul');
+			ulEle = document.createElement('ul'),
+			detailDiv = document.createElement('div');
+		detailDiv.id = 'J_dateDetail';
+		detailDiv.className = 'date-detail';
 		
 		while(bodyDiv.hasChildNodes()){
 			bodyDiv.removeChild(bodyDiv.firstChild);
@@ -249,17 +256,15 @@ var kCal = function(config){
 			liEle.appendChild(textNode);
 			ulEle.appendChild(liEle);
 		}
-
-		bodyDiv.appendChild(ulEle);
-		wrapEle.appendChild(bodyDiv);
-		wrapEle.className = wrapEle.className + ' k-cal-wrap';//方便为万年历添加样式。
-
+		
 		for(i=0; i<lsList.length; i++){
 			lsInfo = lsList[i];
 			liEle = document.createElement('li');
 			
 			aEle = document.createElement('a');
 			textNode = document.createTextNode(lsInfo.sDay);
+			aEle.setAttribute('year', lsInfo.sYear);
+			aEle.setAttribute('month', lsInfo.sMon);
 			aEle.appendChild(textNode);
 			aEle.href = "javascript:;";
 
@@ -280,12 +285,18 @@ var kCal = function(config){
 			}
 			ulEle.appendChild(liEle);
 		}
+
+		bodyDiv.appendChild(ulEle);
+		if(! document.getElementById('J_dateDetail')){
+			wrapEle.appendChild(detailDiv);
+		}
+		
 	}
 	/**
-	 * [createCalDetail 生成指定日期阳历阴历详细信息html]
+	 * [createCalDetail 生成指定日期阴历&阳历详细信息html]
 	 * @return {[type]} [description]
 	 */
-	function createCalDetail(calId, currentYear, currentYearMonth, currentDate){
+	function createCalDetail(calId, currentYear, currentMonth, currentDate){
 		var
 			pEle,textNode,
 			week = new Date(currentYear, currentMonth-1, currentDate).getDay(),
@@ -293,13 +304,16 @@ var kCal = function(config){
 			spanEle = document.createElement('span'),
 			strontEle = document.createElement('strong'),
 			wrapEle = document.getElementById(calId),
-			detailDiv = document.createElement('div');
-		detailDiv.className = 'date-detail';
+			detailDiv = document.getElementById('J_dateDetail');
 		
+		while(detailDiv.hasChildNodes()){
+			detailDiv.removeChild(detailDiv.firstChild);
+		}
+
 		if(week === 0){
 			textNode = document.createTextNode(''+currentYear+'-'+currentMonth+'-'+currentDate+' '+lunarInfo.chineseWeekName[6]);
 		}else{
-			textNode = document.createTextNode(''+currentYear+'-'+currentMonth+'-'+currentDate+' '+lunarInfo.chineseWeekName[week]);
+			textNode = document.createTextNode(''+currentYear+'-'+currentMonth+'-'+currentDate+' '+lunarInfo.chineseWeekName[week-1]);
 		}
 		spanEle.appendChild(textNode);
 		detailDiv.appendChild(spanEle);
@@ -322,8 +336,6 @@ var kCal = function(config){
 		pEle = document.createElement('p');
 		pEle.appendChild(textNode);
 		detailDiv.appendChild(pEle);
-
-		wrapEle.appendChild(detailDiv);
 	}
 	
 	/**
@@ -331,6 +343,13 @@ var kCal = function(config){
 	 * @return {[type]} [description]
 	 */
 	function createTime(){}
+	// 获取宜忌事列表
+	function getCanDolist(url,currentYear,currentMonth,currentDate){
+		var
+			xhr = new XMLHttpRequest();
+		xhr.open('get',url,false);
+		xhr.send()
+	}
 	/**
 	 * [eventHandler 添加事件处理]
 	 * @return {[type]} [description]
@@ -342,7 +361,8 @@ var kCal = function(config){
 			prevMonthBtn = document.getElementById('J_prevMonth'),
 			nextMonthBtn = document.getElementById('J_nextMonth'),
 			yearSelect = document.getElementById('J_calYear'),
-			monthSelect = document.getElementById('J_calMonth');
+			monthSelect = document.getElementById('J_calMonth'),
+			calBody = document.getElementById('J_calBody');
 
 		prevYearBtn.addEventListener('click',function(ev){
 			var
@@ -402,6 +422,37 @@ var kCal = function(config){
 				currentYear = parseInt(yearSelect.value,10),
 				currentMonth = parseInt(monthSelect.value,10);
 			createCalBody(calId, currentYear, currentMonth);
+		}, false);
+
+		calBody.addEventListener('click', function(ev){
+			var
+				choosedDate,choosedMonth,choosedYear,//用户点击的日期
+				currentYear = parseInt(yearSelect.value,10),
+				currentMonth = parseInt(monthSelect.value,10);//当前显示的年份与月份
+			
+			if(ev.target.nodeName.toLowerCase() === 'span'){
+				choosedDate = ev.target.previousSibling.firstChild.nodeValue;
+				choosedMonth = ev.target.previousSibling.getAttribute('month');
+				choosedYear = ev.target.previousSibling.getAttribute('year');
+			}
+			if(ev.target.nodeName.toLowerCase() === 'a'){
+				choosedDate = ev.target.firstChild.nodeValue;
+				choosedMonth = ev.target.getAttribute('month');
+				choosedYear = ev.target.getAttribute('year');
+			}
+			
+			choosedDate = parseInt(choosedDate , 10);
+			choosedMonth = parseInt(choosedMonth , 10);
+			choosedYear = parseInt(choosedYear , 10);
+			
+			if(choosedMonth !== currentMonth){
+				createCalHead(choosedYear, choosedMonth);
+				createCalBody(calId, choosedYear, choosedMonth);
+				createCalDetail(calId, choosedYear, choosedMonth, choosedDate);
+				eventHandler();
+			}else{
+				createCalDetail(calId,currentYear, currentMonth,choosedDate);
+			}
 		}, false);
 	}
 	/**
@@ -733,9 +784,9 @@ var kCal = function(config){
 	 * @return {[type]}              [description]
 	 */
 	(function init(){
-		createCalHead();
+		createCalHead(currentYear,currentMonth);
 		createCalBody(calId,currentYear,currentMonth);
-		createCalDetail(calId,now.getFullYear(),now.getMonth()-1, now.getDate());
+		createCalDetail(calId,now.getFullYear(),now.getMonth()+1, now.getDate());
 		getCss(cssUrl);
 		eventHandler();
 	})();
