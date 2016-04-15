@@ -115,8 +115,32 @@ var kCal = function(config){
 				 * @type {Array}
 				 */
 				chineseTerm : ["\u5c0f\u5bd2","\u5927\u5bd2","\u7acb\u6625","\u96e8\u6c34","\u60ca\u86f0","\u6625\u5206","\u6e05\u660e","\u8c37\u96e8","\u7acb\u590f","\u5c0f\u6ee1","\u8292\u79cd","\u590f\u81f3","\u5c0f\u6691","\u5927\u6691","\u7acb\u79cb","\u5904\u6691","\u767d\u9732","\u79cb\u5206","\u5bd2\u9732","\u971c\u964d","\u7acb\u51ac","\u5c0f\u96ea","\u5927\u96ea","\u51ac\u81f3"],
+				/**
+				 * [chineseLunarDate 农历日期速查表]
+				 * @type {Array}
+				 */
 				chineseLunarDate : ["\u521d\u4e00","\u521d\u4e8c","\u521d\u4e09","\u521d\u56db","\u521d\u4e94","\u521d\u516d","\u521d\u4e03","\u521d\u516b","\u521d\u4e5d","\u521d\u5341","\u5341 \u4e00","\u5341\u4e8c","\u5341\u4e09","\u5341\u56db","\u5341\u4e94","\u5341\u516d","\u5341\u4e03","\u5341\u516b","\u5341\u4e5d","\u5eff\u5341","\u5eff\u4e00","\u5eff\u4e8c","\u5eff\u4e09","\u5eff\u56db","\u4e94","\u5eff\u516d","\u5eff\u4e03","\u5eff\u516b","\u5eff\u4e5d","\u5eff\u5341","\u5345"],
-				chineseWeekName : ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"]
+				chineseWeekName : ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"],
+			     /**
+			      * [Gan 天干地支之天干速查表 "甲","乙","丙","丁","戊","己","庚","辛","壬","癸"]
+			      * @type {Array}
+			      */
+				gan:["\u7532","\u4e59","\u4e19","\u4e01","\u620a","\u5df1","\u5e9a","\u8f9b","\u58ec","\u7678"],
+			     /**
+			      * [Zhi 天干地支之地支速查表 "子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"]
+			      * @type {Array}
+			      */
+				zhi:["\u5b50","\u4e11","\u5bc5","\u536f","\u8fb0","\u5df3","\u5348","\u672a","\u7533","\u9149","\u620c","\u4ea5"],
+				/**
+				 * [Zodiac 生肖速查表 "鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"]
+				 * @type {Array}
+				 */
+				zodiac:["\u9f20","\u725b","\u864e","\u5154","\u9f99","\u86c7","\u9a6c","\u7f8a","\u7334","\u9e21","\u72d7","\u732a"],
+				/**
+				 * [chineseMonthName 中文月份速查表]
+				 * @type {Array}
+				 */
+				chineseMonthName:["\u6b63","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d","\u5341","\u51ac","\u814a"]
 		},
 		now = new Date(),//当日日期
 		calId = config.calId ? config.calId : 0,
@@ -129,7 +153,8 @@ var kCal = function(config){
 	 * [createCalHead 生成万年历头部html]
 	 * @return {[type]}              [description]
 	 */
-	function createCalHead () {
+	
+	function createCalHead() {
 		var
 			textNode,aEle,spanEle,lsInfo,optionEle,
 			headDiv = document.createElement('div'),
@@ -139,6 +164,7 @@ var kCal = function(config){
 			monthSelectEle = document.createElement('select');
 		headDiv.className = 'cal-head';
 		bodyDiv.id = 'J_calBody';
+		bodyDiv.className = 'cal-body';
 
 		aEle = document.createElement('a');
 		aEle.href = "javascript:;";
@@ -255,10 +281,56 @@ var kCal = function(config){
 			ulEle.appendChild(liEle);
 		}
 	}
-	//生成指定日期阳历阴历详细信息html
-	function createCalDetail(){}
-	//生产北京时间
-	function createTime(){};
+	/**
+	 * [createCalDetail 生成指定日期阳历阴历详细信息html]
+	 * @return {[type]} [description]
+	 */
+	function createCalDetail(calId, currentYear, currentYearMonth, currentDate){
+		var
+			pEle,textNode,
+			week = new Date(currentYear, currentMonth-1, currentDate).getDay(),
+			lunarYMD = solarToLunar(currentYear, currentMonth, currentDate),
+			spanEle = document.createElement('span'),
+			strontEle = document.createElement('strong'),
+			wrapEle = document.getElementById(calId),
+			detailDiv = document.createElement('div');
+		detailDiv.className = 'date-detail';
+		
+		if(week === 0){
+			textNode = document.createTextNode(''+currentYear+'-'+currentMonth+'-'+currentDate+' '+lunarInfo.chineseWeekName[6]);
+		}else{
+			textNode = document.createTextNode(''+currentYear+'-'+currentMonth+'-'+currentDate+' '+lunarInfo.chineseWeekName[week]);
+		}
+		spanEle.appendChild(textNode);
+		detailDiv.appendChild(spanEle);
+
+		textNode = document.createTextNode(currentDate);
+		strontEle.appendChild(textNode);
+		detailDiv.appendChild(strontEle);
+
+		textNode = document.createTextNode('农历' + lunarInfo.chineseMonthName[lunarYMD.lMonth-1] + '月' + lunarInfo.chineseLunarDate[lunarYMD.lDay-1]);
+		pEle = document.createElement('p');
+		pEle.appendChild(textNode);
+		detailDiv.appendChild(pEle);
+
+		textNode = document.createTextNode(lunarYMD.gzYear + '年' + lunarYMD.gzMonth + '月' + lunarYMD.gzDay + '日');
+		pEle = document.createElement('p');
+		pEle.appendChild(textNode);
+		detailDiv.appendChild(pEle);
+
+		textNode = document.createTextNode(lunarYMD.zodiac+'年');
+		pEle = document.createElement('p');
+		pEle.appendChild(textNode);
+		detailDiv.appendChild(pEle);
+
+		wrapEle.appendChild(detailDiv);
+	}
+	
+	/**
+	 * [createTime 生成北京时间]
+	 * @return {[type]} [description]
+	 */
+	function createTime(){}
 	/**
 	 * [eventHandler 添加事件处理]
 	 * @return {[type]} [description]
@@ -371,7 +443,8 @@ var kCal = function(config){
 		
 		//填充阳历日期信息
 		for(var i=1 , j=1 ,k=1; i<=42; i++){
-			var lsInfo = {};
+			var 
+				lsInfo = {};
 			if(i <= prevMonDays){
 				if(month === 1){
 					lsInfo.sMon = 12;
@@ -459,6 +532,10 @@ var kCal = function(config){
 	 */
 	function solarToLunar(year,month,day){
 		var
+			gzYear, gzMonth, gzDay,zodiac,
+			firstTermThisMon,//指定月的第一个节气日期
+			fourthTerm,//立春
+			offsetMon,//指定月的第一天与1990/1/1相差天数
 			lYear,lMonth,lDay,//阴历年、月、日
 			lLeapMonth,//阴历闰的月份
 			temp,
@@ -494,12 +571,33 @@ var kCal = function(config){
 
 		lMonth = i;
 		lDay = offset + 1;
+		
+		fourthTerm = getTermDate(year, 2)[1];
+		if(month-1<2 && day<fourthTerm){
+			gzYear = getGanZhi(year-5);
+		}else{
+			gzYear = getGanZhi(year-4);
+		}
 
+		firstTermThisMon = getTermDate(year,month)[0];
+		if(day >= firstTermThisMon){
+			gzMonth = getGanZhi((year-1900)*12+month+12);
+		}else{
+			gzMonth = getGanZhi((year-1900)*12+month+11);
+		}
+
+		offsetMon = Date.UTC(year, month-1, 1)/86400000+25567+10;
+		gzDay = getGanZhi(offsetMon+day-1);
+		zodiac = lunarInfo.zodiac[(year-4)%12];
 		return {
 			lYear : lYear,
 			lMonth : lMonth,
 			lDay : lDay,
-			isAfterLeap : isAfterLeap
+			isAfterLeap : isAfterLeap,
+			gzYear : gzYear,
+			gzMonth : gzMonth,
+			gzDay : gzDay,
+			zodiac : zodiac
 		};
 	}
 	
@@ -622,14 +720,24 @@ var kCal = function(config){
 		}
 	}
 	/**
+	 * [getGanZhi 获取天干地支（年月日）]
+	 * @param  {[Integer]} offset [相对于甲子的偏移量]
+	 * @return {[string]}      [天干地支的汉字表示]
+	 */
+	function getGanZhi(offset){
+		return lunarInfo.gan[offset%10]+lunarInfo.zhi[offset%12];
+	}
+
+	/**
 	 * [init ]
 	 * @return {[type]}              [description]
 	 */
 	(function init(){
 		createCalHead();
 		createCalBody(calId,currentYear,currentMonth);
+		createCalDetail(calId,now.getFullYear(),now.getMonth()-1, now.getDate());
 		getCss(cssUrl);
-		eventHandler()
+		eventHandler();
 	})();
 
 };
