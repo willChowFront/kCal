@@ -406,7 +406,7 @@ var kCal = function(config){
 	function getCanDolist(url,currentYear,currentMonth,currentDate){
 		var
 			goodBad,
-			param = JSON.stringify({currentYear:currentYear,currentDate:currentDate,currentMonth:currentMonth}),
+			param = '?currentYear='+currentYear+'&currentMonth='+currentMonth+'&currentDate='+currentDate,
 			goodBadDiv = document.getElementById('J_goodBad'),
 			olEle, textNode, liEle, 
 			xhr = new XMLHttpRequest();
