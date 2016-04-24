@@ -1,0 +1,249 @@
+/*-----------------------------------------------------
+* @Description:     万年历组件默认样式
+* @Version:         1.0.0
+* @author:          willChow(zhaokaikangwill@foxmail.com)
+* @name:			赵凯康
+* @tele				15694303159
+* @date             2016.04.07
+* ==NOTES:=============================================
+* v1.0.0(2016.04.07):
+     初始生成
+* -----------------------------------------------------*/
+.k-cal-wrap {
+	width: 700px;
+}
+
+.k-cal-wrap:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.k-cal-wrap .cal-body{
+	float: left;
+	width: 498px;
+}
+
+.k-cal-wrap ul {
+	width: 100%;
+	border-left:1px solid #bababa; 
+}
+
+.k-cal-wrap ul:after{
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.k-cal-wrap .cal-head {
+	width: 300px;
+	margin: 10px auto;
+	height: 20px;
+}
+
+.k-cal-wrap .cal-head .year-select-wrap, .k-cal-wrap .cal-head .month-select-wrap{
+	float: left;
+	width: 75px;
+	height: 20px;
+	border-right: 1px solid #bababa;
+	overflow: hidden;
+}
+
+.k-cal-wrap .cal-head select {
+	float: left;
+	height: 20px;
+	line-height: 20px;
+	width: 100px;
+	font-size: 12px;
+	border: 1px solid #bababa;
+	text-align: center;
+}
+
+.k-cal-wrap .cal-head .cal-year {
+	background: url("prev-next.gif") no-repeat  60px -50px;
+}
+
+.k-cal-wrap .cal-head .cal-month {
+	background: url("prev-next.gif") no-repeat  60px -50px;
+}
+
+.k-cal-wrap .cal-head a {
+	float: left;
+	display: inline-block;
+	height: 18px;
+	width: 20px;
+	border: 1px solid #bababa;
+}
+
+.k-cal-wrap  ul li {
+	float: left;
+	width: 70px;
+	text-align: center;
+	height: 74px;
+	font-size: 14px;
+	border-right: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+}
+
+.k-cal-wrap  .cal-date {
+	border-right: 1px solid #bababa;
+	border-bottom: 1px solid #bababa;
+	cursor: pointer;
+}
+
+.k-cal-wrap  .cal-date:hover {
+	-webkit-transform: scale(1.01);
+	-moz-transform: scale(1.01);
+	transform: scale(1.01);
+  	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+  	-webkit-box-shadow: 0 -1px 10px rgba(0,0,0,.5);
+  	-moz-box-shadow: 0 -1px 10px rgba(0,0,0,.5);
+	box-shadow: 0 -1px 10px rgba(0,0,0,.5); 
+}
+
+.k-cal-wrap .week-name {
+	line-height: 40px;
+	height: 40px;
+	background-color:#327fc0;
+	background-color: rgba(42,192,235,0.4);
+	border-right: 1px solid #bababa;
+	border-top:1px solid #bababa;
+	border-bottom:1px solid #bababa;
+}
+
+.k-cal-wrap  ul li a{
+	display: inline-block;
+	width: 100%;
+	height: 37px;
+	line-height: 37px;
+	font-weight: bold;
+	font-size: 16px;
+	color: #000;
+}
+
+.k-cal-wrap  ul li a:hover{
+	text-decoration: none;
+}
+
+.k-cal-wrap  .prev-year {
+	background: url("prev-next.gif") no-repeat 2px 0;
+}
+
+.k-cal-wrap  .next-year {
+	background: url("prev-next.gif") no-repeat 2px -25px;
+	margin-right: 10px;
+}
+
+.k-cal-wrap  .prev-month {
+	background: url("prev-next.gif") no-repeat 2px 0;
+}
+
+.k-cal-wrap  .next-month {
+	background: url("prev-next.gif") no-repeat 2px -25px;
+}
+
+.k-cal-wrap  ul li span {
+	display: inline-block;
+	width: 100%;
+	height: 37px;
+	line-height: 37px;
+	font-size: 12px;
+}
+
+.k-cal-wrap  ul li .term {
+	color: red;
+}
+
+.k-cal-wrap  ul li .solar-holiday {
+	color: #132eb6;
+}
+
+.k-cal-wrap ul .today {
+	background: url("today.gif") no-repeat 51% 9%;
+}
+
+.k-cal-wrap .date-detail {
+	float: left;
+	width: 176px;
+	height: 490px;
+	border-top:1px solid #bababa;
+	border-bottom:1px solid #bababa;
+	border-right:1px solid #bababa;
+}
+
+.k-cal-wrap .date-detail span {
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+	color: #333;
+	font-size: 14px;
+}
+
+.k-cal-wrap .date-detail strong {
+	display: inline-block;
+	width: 100%;
+	height: 80px;
+	line-height: 80px;
+	font-weight: bolder;
+	font-size: 80px;
+	text-align: center;
+	color: rgb(204, 0, 0);
+}
+
+.k-cal-wrap .date-detail p {
+	height: 30px;
+	line-height: 30px;
+	font-size: 14px;
+	text-align: center;
+	color: rgb(153, 153, 153);
+}
+
+.k-cal-wrap .date-detail .good-bad:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.date-detail .good-bad {
+	width: 100%;
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid #bababa;
+}
+
+.date-detail .good-bad .good-list {
+	float: left;
+	height: 25px;
+	line-height: 25px;
+	width: 50%;
+	font-size: 12px;
+	color: rgb(176, 67, 67);
+	text-align: center;
+}
+
+.date-detail .good-bad .bad-list {
+	float: left;
+	height: 25px;
+	line-height: 25px;
+	width: 50%;
+	font-size: 12px;
+	color: rgb(91, 91, 91);
+	text-align: center;
+}
+
+.not-current-month {
+	background-color:#e0efc4; 
+}
