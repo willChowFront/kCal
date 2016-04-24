@@ -413,6 +413,7 @@ var kCal = function(config){
 
 		xhr.open('get',url,true);
 		xhr.send(param);
+		console.log(param);
 		xhr.onload = function(){
 			if(xhr.readyState == 4){
 				if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
