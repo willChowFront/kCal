@@ -390,7 +390,7 @@ var kCal = function(config){
 		goodBadDiv.className = 'good-bad';
 		detailDiv.appendChild(goodBadDiv);
 
-		// getCanDolist(goodBadUrl, currentYear, currentMonth, currentDate);
+		getCanDolist(goodBadUrl, currentYear, currentMonth, currentDate);
 	}
 	
 	/**
