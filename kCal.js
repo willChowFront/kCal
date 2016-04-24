@@ -1,7 +1,9 @@
 /*-----------------------------------------------------
 * @Description:     万年历组件
 * @Version:         1.0.0
-* @author:          willChow(zhaokaikangwill@foxmail.com)
+* @author:          willChow(zhaokaikangwill@foxmail.com) 
+* @name:			赵凯康
+* @tele				15694303159
 * @date             2016.04.07
 * ==NOTES:=============================================
 * v1.0.0(2016.04.07):
@@ -404,13 +406,18 @@ var kCal = function(config){
 	function getCanDolist(url,currentYear,currentMonth,currentDate){
 		var
 			goodBad,
-			param = JSON.stringify({currentYear:currentYear,currentDate:currentDate,currentMonth:currentMonth}),
+			param = {currentYear:currentYear,currentDate:currentDate,currentMonth:currentMonth},
 			goodBadDiv = document.getElementById('J_goodBad'),
 			olEle, textNode, liEle, 
 			xhr = new XMLHttpRequest();
 
+		for(var pName in param){
+			url = addUrlParams(url,pName,param[pName]);
+		}
+
 		xhr.open('get',url,true);
-		xhr.send(param);
+		xhr.send(null);
+		console.log(param);
 		xhr.onload = function(){
 			if(xhr.readyState == 4){
 				if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
@@ -446,6 +453,18 @@ var kCal = function(config){
 				}	
 			}
 		};
+	}
+	/**
+	 * [addUrlParams 向url地址添加参数]
+	 * @param {[type]} url   [description]
+	 * @param {[type]} name  [参数名]
+	 * @param {[type]} value [参数值]
+	 * return  添加参数后的url
+	 */
+	function addUrlParams(url,name,value){
+		url += url.indexOf('?') === -1 ? '?' : '&';
+		url += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+		return url;
 	}
 	/**
 	 * [eventHandler 添加事件处理]
@@ -922,5 +941,3 @@ var kCal = function(config){
 	})();
 
 };
-
-
