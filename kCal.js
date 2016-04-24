@@ -406,13 +406,17 @@ var kCal = function(config){
 	function getCanDolist(url,currentYear,currentMonth,currentDate){
 		var
 			goodBad,
-			param = '?currentYear='+currentYear+'&currentMonth='+currentMonth+'&currentDate='+currentDate,
+			param = {currentYear:currentYear,currentDate:currentDate,currentMonth:currentMonth},
 			goodBadDiv = document.getElementById('J_goodBad'),
 			olEle, textNode, liEle, 
 			xhr = new XMLHttpRequest();
 
+		for(var pName in param){
+			url = addUrlParams(url,pName,param[pName]);
+		}
+
 		xhr.open('get',url,true);
-		xhr.send(param);
+		xhr.send(null);
 		console.log(param);
 		xhr.onload = function(){
 			if(xhr.readyState == 4){
@@ -449,6 +453,18 @@ var kCal = function(config){
 				}	
 			}
 		};
+	}
+	/**
+	 * [addUrlParams 向url地址添加参数]
+	 * @param {[type]} url   [description]
+	 * @param {[type]} name  [参数名]
+	 * @param {[type]} value [参数值]
+	 * return  添加参数后的url
+	 */
+	function addUrlParams(url,name,value){
+		url += url.indexOf('?') === -1 ? '?' : '&';
+		url += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+		return url;
 	}
 	/**
 	 * [eventHandler 添加事件处理]
