@@ -933,10 +933,10 @@ var kCal = function(config){
 	 * @return {[type]}              [description]
 	 */
 	(function init(){
+		getCss(cssUrl);
 		createCalHead(currentYear,currentMonth);
 		createCalBody(calId,currentYear,currentMonth);
 		createCalDetail(calId,now.getFullYear(),now.getMonth()+1, now.getDate());
-		getCss(cssUrl);
 		eventHandler();
 	})();
 
