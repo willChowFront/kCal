@@ -2,8 +2,7 @@
 * @Description:     万年历组件
 * @Version:         1.0.0
 * @author:          willChow(zhaokaikangwill@foxmail.com) 
-* @name:			赵凯康
-* @tele				15694303159
+* @name:	    赵凯康
 * @date             2016.04.07
 * ==NOTES:=============================================
 * v1.0.0(2016.04.07):
